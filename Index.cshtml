@@ -1,0 +1,409 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="row">
+    <div class="col-md-6">
+        @*User Column Chart will appeared be here*@
+        <div id="userChart"></div>
+    </div>
+    <div class="col-md-6">
+        @*AVG Time Column Chart will be appeared here*@
+        <div id="avgTimeChartByModule"></div>
+    </div>
+    <div class="col-md-6 pt-5">
+        @*Session (Avg) by User by Module Column Chart*@
+        <div id="sessionSvgByUserByModule"></div>
+    </div>
+    <div class="col-md-6 pt-5">
+        @*Users Over time Line Chart*@
+        <div id="usersOverTime"></div>
+    </div>
+    <div class="col-md-6 pt-5">
+        @*Avg Time Spen Line chart*@
+        <div id="avgTimeSpentModule"></div>
+    </div>
+    <div class="col-md-6 pt-5">
+        @*Sessions BAR chart*@
+        <div id="sessionChart"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        var userChartOptions = {
+            title: {
+                text: 'Users',
+                floating: true,
+                offsetY: 0,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            },
+            series: [
+                {
+                    name: 'Used',
+                    data: [44, 55, 41]
+                }, {
+                    name: 'Unused',
+                    data: [44, 55, 41]
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: true
+                },
+                zoom: {
+                    enabled: true
+                }
+            },
+            responsive: [
+                {
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            offsetX: -10,
+                            offsetY: 0
+                        }
+                    }
+                }
+            ],
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                },
+            },
+            xaxis: {
+                type: 'Category',
+                categories: [
+                    'Jan', 'Feb', 'Mar'
+                ],
+            },
+            yaxis: {
+                labels: {
+                    show: false
+                },
+                axisBorder: {
+                    show: true,
+                }
+            },
+            legend: {
+                position: 'right',
+                offsetY: 40
+            },
+            fill: {
+                opacity: 1
+            }
+        };
+
+        var userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
+        userChart.render();
+
+        // User chart Ends
+
+        var avgTimeByModuleChartOptions = {
+            series: [{
+                name: 'AVG Time',
+                data: ['10:00', '8:00', '9:15']
+            }],
+            chart: {
+                height: 350,
+                type: 'bar',
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        position: 'top', // top, center, bottom
+                    },
+                }
+            },
+
+            xaxis: {
+                type: 'category',
+                categories: ["ME", "STR", "SJRL"],
+                position: 'bottom',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                }
+            },
+            yaxis: {
+                labels: {
+                    show: false
+                },
+                axisBorder: {
+                    show: true,
+                }
+            },
+            title: {
+                text: 'AVG Time - Module',
+                //floating: true,
+                offsetY: 0,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            }
+        };
+
+        var avgTimeChartByModule = new ApexCharts(document.querySelector("#avgTimeChartByModule"), avgTimeByModuleChartOptions);
+        avgTimeChartByModule.render();
+
+        // End AVG Time - Module
+
+        var sessionAvgTimeByUserByModuleOpt = {
+            title: {
+                text: 'Sessions (AVG) by User by Module',
+                floating: true,
+                offsetY: 0,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            },
+            series: [
+                {
+                    name: 'ME',
+                    data: [20, 50, 13]
+                }, {
+                    name: 'STR',
+                    data: [46, 0, 28]
+                }, {
+                    name: 'SJRL',
+                    data: [35, 30, 25]
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: true
+                },
+                zoom: {
+                    enabled: true
+                }
+            },
+            responsive: [
+                {
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            offsetX: -10,
+                            offsetY: 0
+                        }
+                    }
+                }
+            ],
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                },
+            },
+            xaxis: {
+                type: 'Category',
+                categories: [
+                    'U1', 'U2', 'U3'
+                ],
+            },
+            yaxis: {
+                labels: {
+                    show: false
+                },
+                axisBorder: {
+                    show: true,
+                }
+            },
+            legend: {
+                position: 'right',
+                offsetY: 40
+            },
+            fill: {
+                opacity: 1
+            }
+        };
+
+        var sessionAvgTimeByUserByModuleChart = new ApexCharts(document.querySelector("#sessionSvgByUserByModule"), sessionAvgTimeByUserByModuleOpt);
+        sessionAvgTimeByUserByModuleChart.render();
+
+        // End Session AVG Time By user By Module
+
+        var userOverTimeOpt = {
+            title: {
+                text: 'Users Over Time',
+                floating: true,
+                offsetY: 0,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            },
+            series: [{
+                name: 'Used Lisence',
+                data: [31, 40, 28, 51, 42, 109, 100]
+            }, {
+                name: 'Unused Lisence',
+                data: [11, 32, 45, 32, 34, 52, 41]
+            }],
+            chart: {
+                type: 'line',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: true,
+                    offsetX: 0,
+                    offsetY: 0,
+                    tools: {
+                        download: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false | '<img src="/static/icons/reset.png" width="20">',
+                        customIcons: []
+                    },
+                    autoSelected: 'zoom' 
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            xaxis: {
+                // title: 'Day',
+                type: 'category',
+                categories: ["1", "2", "3", "4", "5", "6", "7"]
+            },
+            //tooltip: {
+            //    x: {
+            //        format: 'dd/MM/yy HH:mm'
+            //    },
+            //},
+        };
+
+        var userOverTimeChart = new ApexCharts(document.querySelector("#usersOverTime"), userOverTimeOpt);
+        userOverTimeChart.render();
+
+        // End User Over time Chart
+        var avgTimeSpentModuleOpt = {
+            title: {
+                text: 'AVG Time Spent Module',
+                floating: true,
+                offsetY: 0,
+                align: 'center',
+                style: {
+                    color: '#444'
+                }
+            },
+            series: [{
+                name: 'MZ',
+                data: [31, 40, 28, 51, 42, 109, 100]
+            }, {
+                name: 'SJRI',
+                data: [11, 32, 45, 32, 34, 52, 41]
+                }, {
+                    name: 'SJRL',
+                    data: [15, 45, 30, 28, 48, 55, 67]
+                }],
+            chart: {
+                type: 'line',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: true,
+                    offsetX: 0,
+                    offsetY: 0,
+                    tools: {
+                        download: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false | '<img src="/static/icons/reset.png" width="20">',
+                        customIcons: []
+                    },
+                    autoSelected: 'zoom'
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            xaxis: {
+                // title: 'Day',
+                type: 'category',
+                categories: ["1", "2", "3", "4", "5", "6", "7"]
+            },
+            //tooltip: {
+            //    x: {
+            //        format: 'dd/MM/yy HH:mm'
+            //    },
+            //},
+        };
+
+        var avgTimeSpentModuleChart = new ApexCharts(document.querySelector("#avgTimeSpentModule"), avgTimeSpentModuleOpt);
+        avgTimeSpentModuleChart.render();
+
+        // End AVG Time spent by Module
+        var sessionChartOpt = {
+            series: [{
+                title: '',
+                data: [35, 46, 20, 80]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['U1', 'U2', 'U3', 'U4'],
+            }
+        };
+
+        var sessionChart = new ApexCharts(document.querySelector("#sessionChart"), sessionChartOpt);
+        sessionChart.render();
+      
+
+        //sessionChart.updateSeries() // This method will be used for render data from AJAX 
+                                        //and it's has a format which we got from the doc
+
+    </script>
+}
