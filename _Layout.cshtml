@@ -16,6 +16,7 @@
     <link href="~/css/bootstrap.min.css?v=1.1" rel="stylesheet" />
     <link href="~/css/font-awesome.min.css?v=1.1" rel="stylesheet" />
     <link href="~/css/apexchart/apexcharts.css" rel="stylesheet" />
+    @RenderSection("StyleSection")
     <link href="~/css/responsive.css?v=1.1" rel="stylesheet" />
     <link href="~/css/style.css?v=1.1" rel="stylesheet" />
 
@@ -54,7 +55,7 @@
 
     @*<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>*@
 </head>
-<body>
+<body style="background-color: #f2f3f8 !important">
     <!--== Start loader Section ==-->
     <div id="loader-wrapper">
         <div id="loader"></div>
@@ -72,9 +73,9 @@
             </a>
         </div>
 
-        @if (Session["FullName"] != null)
+        @*@if (Session["FullName"] == null)
         {
-            if (Session["FullName"].ToString() != "")
+            if (Session["FullName"].ToString() == "")
             {
                 <span style="color:#fff;padding-right:30px; position:inherit; color:#70a397;font-size:14px"><br /><br /><br /><br /><br /><br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Logged In : @Session["FullName"].ToString()</b></span>
             }
@@ -86,17 +87,18 @@
         else
         {
             @Url.Action("Index", "Account");
-        }
+        }*@
+        <span style="color:#fff;padding-right:30px; position:inherit; color:#70a397;font-size:14px"><br /><br /><br /><br /><br /><br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Logged In : Name</b></span>
         <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav side-nav">
+            <ul class="navbar-nav side-nav" style="width: 215px !important;">
                 <li data-toggle="collapse" data-target="#products1" class="nav-item collapsed active">
                     <a href="#"><i class="fas fa-th-list"></i> Reviews <span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="products1">
                     <li data-toggle="collapse" data-target="#products4" class="nav-item collapsed active">
                         @*<a href="/Home/MedicalExaminerDashboard">
-                                Medical Examiner Dashboard
-                            </a>*@
+                            Medical Examiner Dashboard
+                        </a>*@
                         <a href="#">Mortality <span class="arrow"></span></a>
                         <ul class="sub-menu collapse" id="products4">
                             <li>
@@ -105,17 +107,17 @@
                                 </a>
                             </li>
                             @*<li>
-                                    <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                        Paeds
-                                    </a>
-                                </li>*@
+                                <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                                    Paeds
+                                </a>
+                            </li>*@
 
                         </ul>
                     </li>
                     <li data-toggle="collapse" data-target="#products12" class="nav-item collapsed active">
                         @*<a href="/Home/MedicalExaminerDashboard">
-                                Medical Examiner Dashboard
-                            </a>*@
+                            Medical Examiner Dashboard
+                        </a>*@
                         <a href="#">Infections <span class="arrow"></span></a>
                         <ul class="sub-menu collapse" id="products12">
                             <li>
@@ -129,34 +131,34 @@
                                 </a>
                             </li>
                             @*<li>
-                                    <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                        Paeds
-                                    </a>
-                                </li>*@
+                                <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                                    Paeds
+                                </a>
+                            </li>*@
 
                         </ul>
                     </li>
 
                     @*<li>
-                            <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                Specialty
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                Procedures
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                Diseases/Condition
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                Activity and Coding
-                            </a>
-                        </li>*@
+                        <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                            Specialty
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                            Procedures
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                            Diseases/Condition
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                            Activity and Coding
+                        </a>
+                    </li>*@
                 </ul>
                 <li data-toggle="collapse" data-target="#products2" class="nav-item collapsed active">
                     <a href="#"><i class="fas fa-th-list"></i> Reports <span class="arrow"></span></a>
@@ -164,8 +166,8 @@
                 <ul class="sub-menu collapse" id="products2">
                     <li data-toggle="collapse" data-target="#products3">
                         @*<a href="/Home/MedicalExaminerDashboard">
-                                Medical Examiner Dashboard
-                            </a>*@
+                            Medical Examiner Dashboard
+                        </a>*@
                         <a href="#">Mortality <span class="arrow"></span></a>
                         <ul class="sub-menu collapse" id="products3">
                             <li>
@@ -202,8 +204,8 @@
                     </li>
                     <li data-toggle="collapse" data-target="#products27" class="nav-item collapsed active">
                         @*<a href="/Home/MedicalExaminerDashboard">
-                                Medical Examiner Dashboard
-                            </a>*@
+                            Medical Examiner Dashboard
+                        </a>*@
                         <a href="#">COVID19 <span class="arrow"></span></a>
                         <ul class="sub-menu collapse" id="products27">
                             <li>
@@ -217,10 +219,10 @@
                                 </a>
                             </li>
                             @*<li>
-                                    <a href="@Url.Action("NotImplemented", "home")" class="ex3">
-                                        Paeds
-                                    </a>
-                                </li>*@
+                                <a href="@Url.Action("NotImplemented", "home")" class="ex3">
+                                    Paeds
+                                </a>
+                            </li>*@
 
                         </ul>
                     </li>
@@ -277,8 +279,8 @@
                 <ul class="sub-menu collapse" id="DataManagementLayout">
                     <li data-toggle="collapse" data-target="#DataManagementScreen" class="nav-item collapsed active">
                         @*<a href="/Home/MedicalExaminerDashboard">
-                                Medical Examiner Dashboard
-                            </a>*@
+                            Medical Examiner Dashboard
+                        </a>*@
                         <a href="#">Data Sources <span class="arrow"></span></a>
                         <ul class="sub-menu collapse" id="DataManagementScreen">
                             <li>
@@ -367,7 +369,7 @@
     </nav>
     <br /><br />
     <!--== end header Section ==-->
-    <div class="main-container">
+    <div class="main-container" style="background-color: #f2f3f8 !important; ">
         @RenderBody()
     </div>
     @RenderSection("scripts", required: false)

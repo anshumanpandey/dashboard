@@ -1,3 +1,4 @@
-1. Replace _layout.cshtml
-2. Replace css folders
-3. Add HTML code from Index.cshtml
+1. Add assest folder to your project root directory
+2. Replace _layout.cshtml
+3. Replace css folders
+4. Add HTML code from Index.cshtml
