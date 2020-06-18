@@ -1,4 +1,67 @@
-﻿var assignedBarChartOptions = {
+﻿$(function () {
+    $('#startDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+
+    });
+    $('#endDate').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true
+    });
+
+    $('body').on('click',
+        '#btnSearch',
+        function () {
+
+        });
+
+    LoadAllChart();
+
+    $('body').on('click',
+        '.userLicenseChartButton',
+        function () {
+            UpdateUserLicenseChart($(this).data('reqtype'));
+        });
+
+    $('body').on('click',
+        '.userOverTimeChartButton',
+        function () {
+            UpdateUserOverTime($(this).data('reqtype'));
+        });
+
+    $('body').on('click',
+        '.avgTimeModuleButton',
+        function () {
+            UpdateAvgTimeChartByModule($(this).data('reqtype'));
+        });
+
+    $('body').on('click',
+        '.avgTimeSpentModuleButton',
+        function () {
+            UpdateAvgTimeSpentChartByModule($(this).data('reqtype'));
+        });
+    $('body').on('click',
+        '.sessionAvgTimeByUserByModuleButton',
+        function () {
+            UpdateSessionAvgTimeByUserByModule($(this).data('reqtype'));
+        });
+    $('body').on('click',
+        '.sessionChartButton',
+        function () {
+            UpdateSessionChart($(this).data('reqtype'));
+        });
+    $('body').on('click',
+        '.sessionTimeChart',
+        function () {
+            UpdateSessionTimeChart($(this).data('reqtype'));
+        });
+    
+});
+
+
+
+
+var assignedBarChartOptions = {
     series: [],
     chart: {
         height: 350,
@@ -43,10 +106,8 @@ var userChartOptions = {
         zoom: {
             enabled: true
         },
-        events: {
-            legendClick: function (chartContext, seriesIndex, config) {
-                alert('Legend clicked event fired');
-            }
+        selection: {
+            enabled: true,
         }
     },
     noData: {
@@ -339,7 +400,7 @@ var avgTimeSpentModuleOpt = {
         stacked: true,
         toolbar: {
             show: false
-        },
+        }
     },
     noData: {
         text: 'Loading...'
@@ -447,138 +508,345 @@ var sessionTimeChartOpt = {
     }
 };
 
+var userChart = '', userOverTimeChart = '', avgTimeChartByModule = '', avgTimeSpentModuleChart = ''
+    , sessionAvgTimeByUserByModuleChart = '', sessionChart = '', sessionTimeChart = '';
+
 function LoadAllChart() {
     var assignedRadialBarChart = new ApexCharts(document.querySelector("#assignedBarChart"), assignedBarChartOptions);
     assignedRadialBarChart.render();
+
 
     $.getJSON('/Home/AssignedLicenseBarChartResult', function (response) {
         assignedRadialBarChart.updateSeries([response]);
     });
 
-
-    var userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
+    userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
     userChart.render();
+    UpdateUserLicenseChart('yearly');
 
-    $.getJSON('/Home/UserLicenseChartResult', function (response) {
+    //$.getJSON('/Home/UserLicenseChartResult', function (response) {
 
-        $('#lblNoOfLicenseAllocated').html(response.LicenseInfo.TotalNodLicenseAllocated);
-        $('#lblNoOfUnusedLicense').html(response.LicenseInfo.NoOfUnusedLicense);
-        $('#lblNofUsedLicense').html(response.LicenseInfo.NoOfUsedLicense);
+    //    $('#lblNoOfLicenseAllocated').html(response.LicenseInfo.TotalNodLicenseAllocated);
+    //    $('#lblNoOfUnusedLicense').html(response.LicenseInfo.NoOfUnusedLicense);
+    //    $('#lblNofUsedLicense').html(response.LicenseInfo.NoOfUsedLicense);
 
-        userChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
+    //    userChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
 
-        userChart.updateSeries(response.ChartInfo);
-    });
+    //    userChart.updateSeries(response.ChartInfo);
+    //});
 
+    userOverTimeChart = new ApexCharts(document.querySelector("#usersOverTime"), userOverTimeOpt);
+    userOverTimeChart.render();
+    UpdateUserOverTime('yearly');
 
-    var avgTimeChartByModule =
+    //$.getJSON('/Home/UserOverTimeChartResult', function (response) {
+
+    //    userOverTimeChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
+
+    //    userOverTimeChart.updateSeries(response.ChartInfo);
+    //});
+
+    avgTimeChartByModule =
         new ApexCharts(document.querySelector("#avgTimeChartByModule"), avgTimeByModuleChartOptions);
     avgTimeChartByModule.render();
+    UpdateAvgTimeChartByModule('yearly');
 
-    $.getJSON('/Home/AvgTimeModuleChartResult', function (response) {
+    //$.getJSON('/Home/AvgTimeModuleChartResult', function (response) {
 
-        avgTimeChartByModule.updateSeries(response.ChartInfo);
-        avgTimeChartByModule.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-                
-            },
-            yaxis: {
-                labels: {
-                    show: false,
-                    formatter: function (value) {
-                        return minTommss(value);
-                    }
-                },
-                axisBorder: {
-                    show: true,
-                }
-            },
-        });
-    });
+    //    avgTimeChartByModule.updateSeries(response.ChartInfo);
+    //    avgTimeChartByModule.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
 
-    var sessionAvgTimeByUserByModuleChart = new ApexCharts(document.querySelector("#sessionSvgByUserByModule"),
-        sessionAvgTimeByUserByModuleOpt);
-    sessionAvgTimeByUserByModuleChart.render();
-
-    $.getJSON('/Home/SessionAvgTimeByUserByModuleChartResult', function (response) {
-
-        sessionAvgTimeByUserByModuleChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
-
-        sessionAvgTimeByUserByModuleChart.updateSeries(response.ChartInfo);
-    });
+    //        },
+    //        yaxis: {
+    //            labels: {
+    //                show: false,
+    //                formatter: function (value) {
+    //                    return minTommss(value);
+    //                }
+    //            },
+    //            axisBorder: {
+    //                show: true,
+    //            }
+    //        },
+    //    });
+    //});
 
 
-    var userOverTimeChart = new ApexCharts(document.querySelector("#usersOverTime"), userOverTimeOpt);
-    userOverTimeChart.render();
-
-    $.getJSON('/Home/UserOverTimeChartResult', function (response) {
-
-        userOverTimeChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
-
-        userOverTimeChart.updateSeries(response.ChartInfo);
-    });
-
-    var avgTimeSpentModuleChart =
+     avgTimeSpentModuleChart =
         new ApexCharts(document.querySelector("#avgTimeSpentModule"), avgTimeSpentModuleOpt);
     avgTimeSpentModuleChart.render();
+    UpdateAvgTimeSpentChartByModule('yearly');
+    //$.getJSON('/Home/AvgSpentTimeByModuleChartResult', function (response) {
 
-    $.getJSON('/Home/AvgSpentTimeByModuleChartResult', function (response) {
+    //    avgTimeSpentModuleChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
 
-        avgTimeSpentModuleChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
+    //    avgTimeSpentModuleChart.updateSeries(response.ChartInfo);
+    //});
 
-        avgTimeSpentModuleChart.updateSeries(response.ChartInfo);
-    });
 
-    var sessionChart = new ApexCharts(document.querySelector("#sessionChart"), sessionChartOpt);
+    sessionAvgTimeByUserByModuleChart = new ApexCharts(document.querySelector("#sessionSvgByUserByModule"),
+        sessionAvgTimeByUserByModuleOpt);
+    sessionAvgTimeByUserByModuleChart.render();
+    UpdateSessionAvgTimeByUserByModule('yearly');
+    //$.getJSON('/Home/SessionAvgTimeByUserByModuleChartResult', function (response) {
+
+    //    sessionAvgTimeByUserByModuleChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
+
+    //    sessionAvgTimeByUserByModuleChart.updateSeries(response.ChartInfo);
+    //});
+
+    sessionChart = new ApexCharts(document.querySelector("#sessionChart"), sessionChartOpt);
     sessionChart.render();
+    UpdateSessionChart('yearly');
+    //$.getJSON('/Home/SessionChartResult', function (response) {
 
-    $.getJSON('/Home/SessionChartResult', function (response) {
+    //    sessionChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
 
-        sessionChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
-
-        sessionChart.updateSeries(response.ChartInfo);
-    });
+    //    sessionChart.updateSeries(response.ChartInfo);
+    //});
 
 
-    var sessionTimeChart = new ApexCharts(document.querySelector("#sessionTimeChart"), sessionTimeChartOpt);
+    sessionTimeChart = new ApexCharts(document.querySelector("#sessionTimeChart"), sessionTimeChartOpt);
     sessionTimeChart.render();
+    UpdateSessionTimeChart('yearly');
+    //$.getJSON('/Home/SessionTimeChartResult', function (response) {
 
-    $.getJSON('/Home/SessionTimeChartResult', function (response) {
+    //    sessionTimeChart.updateOptions({
+    //        xaxis: {
+    //            type: response.ChartOptions.X_axisCategoryType,
+    //            categories: response.ChartOptions.X_axisCategories,
+    //        }
+    //    });
 
-        sessionTimeChart.updateOptions({
-            xaxis: {
-                type: response.ChartOptions.X_axisCategoryType,
-                categories: response.ChartOptions.X_axisCategories,
-            }
-        });
+    //    sessionTimeChart.updateSeries(response.ChartInfo);
+    //});
+}
 
-        sessionTimeChart.updateSeries(response.ChartInfo);
+function UpdateUserLicenseChart(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/UserLicenseChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            //userChart.destroy();
+
+            $('#lblNoOfLicenseAllocated').html(response.LicenseInfo.TotalNodLicenseAllocated);
+            $('#lblNoOfUnusedLicense').html(response.LicenseInfo.NoOfUnusedLicense);
+            $('#lblNofUsedLicense').html(response.LicenseInfo.NoOfUsedLicense);
+
+            userChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            userChart.updateSeries(response.ChartInfo);
+        }
+    });
+}
+
+function UpdateUserOverTime(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/UserOverTimeChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+
+            userOverTimeChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            userOverTimeChart.updateSeries(response.ChartInfo);
+        }
+    });
+}
+
+function UpdateAvgTimeChartByModule(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/AvgTimeModuleChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            avgTimeChartByModule.updateSeries(response.ChartInfo);
+            avgTimeChartByModule.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+
+                },
+                yaxis: {
+                    labels: {
+                        show: false,
+                        formatter: function (value) {
+                            return minTommss(value);
+                        }
+                    },
+                    axisBorder: {
+                        show: true,
+                    }
+                },
+            });
+        }
+    });
+}
+
+function UpdateAvgTimeSpentChartByModule(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/AvgSpentTimeByModuleChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            avgTimeSpentModuleChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            avgTimeSpentModuleChart.updateSeries(response.ChartInfo);
+        }
+    });
+}
+
+function UpdateSessionAvgTimeByUserByModule(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/SessionAvgTimeByUserByModuleChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            sessionAvgTimeByUserByModuleChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            sessionAvgTimeByUserByModuleChart.updateSeries(response.ChartInfo);
+        }
+    });
+}
+
+function UpdateSessionChart(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/SessionAvgTimeByUserByModuleChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            sessionChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            sessionChart.updateSeries(response.ChartInfo);
+        }
+    });
+}
+
+function UpdateSessionTimeChart(requestType = 'yearly') {
+    var reqObj = {
+        StartDate: null,
+        EndDate: null,
+        RequestType: requestType
+    };
+
+    $.ajax({
+        url: '/Home/SessionTimeChartResult',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function(response) {
+            sessionTimeChart.updateOptions({
+                xaxis: {
+                    type: response.ChartOptions.X_axisCategoryType,
+                    categories: response.ChartOptions.X_axisCategories,
+                }
+            });
+
+            sessionTimeChart.updateSeries(response.ChartInfo);
+        }
+
     });
 }

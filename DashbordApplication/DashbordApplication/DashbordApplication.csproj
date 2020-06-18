@@ -127,6 +127,8 @@
     <Compile Include="Models\ChartLoadRequestObject.cs" />
     <Compile Include="Models\ChartOptionInformation.cs" />
     <Compile Include="Models\ChartResponseInformation.cs" />
+    <Compile Include="Models\ChartResultResponse.cs" />
+    <Compile Include="Models\DataTypeEnum.cs" />
     <Compile Include="Models\LicenseInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -1967,6 +1969,7 @@
     <Content Include="Scripts\js\modernizr-2.8.3.min.js" />
     <Content Include="Scripts\js\respond-1.4.2.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\UserLicenseInformationChartLoader.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
