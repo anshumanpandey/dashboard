@@ -139,8 +139,18 @@ namespace DashbordApplication.Controllers
         [HttpGet]
         public JsonResult AssignedLicenseBarChartResult(ChartLoadRequestObject reqObj)
         {
-            var assignedLicense = "30";
-            return Json(assignedLicense, JsonRequestBehavior.AllowGet);
+            var result = new
+            {
+                serisData = new[]
+                {
+                    30, 70
+                },
+                LabelData = new[]
+                {
+                    "Used", "Unused"
+                }
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -355,134 +365,164 @@ namespace DashbordApplication.Controllers
         {
             var chartInfo = new List<ChartResponseInformation>();
 
-
             var chartOptions = new ChartOptionInformation();
 
-
-            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
-            {
-                chartInfo = new List<ChartResponseInformation>{
-                    new ChartResponseInformation()
-                    {
-                        name = "AVG Time",
-                        data = new[]
-                        {
-                            $"{MinuteToDecimal(10, 0):##.##}",
-                            $"{MinuteToDecimal(8, 0):##.##}",
-                            $"{MinuteToDecimal(11, 25):##.##}",
-                            $"{MinuteToDecimal(3, 15):##.##}",
-                            $"{MinuteToDecimal(12, 00):##.##}",
-                            $"{MinuteToDecimal(18, 24):##.##}",
-                            $"{MinuteToDecimal(9, 12):##.##}",
-                        }
-                    },
-
-                };
-
-                chartOptions = new ChartOptionInformation()
+            chartInfo = new List<ChartResponseInformation>{
+                new ChartResponseInformation()
                 {
-                    X_axisCategoryType = "category",
-                    X_axisCategories = new[]
+                    name = "AVG Time",
+                    data = new[]
                     {
-                        "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
+                        $"{MinuteToDecimal(10, 0):##.##}",
+                        $"{MinuteToDecimal(8, 0):##.##}",
+                        $"{MinuteToDecimal(11, 25):##.##}",
+                        $"{MinuteToDecimal(3, 15):##.##}",
+                        $"{MinuteToDecimal(12, 00):##.##}",
+                        $"{MinuteToDecimal(18, 24):##.##}",
+                        $"{MinuteToDecimal(9, 12):##.##}",
                     }
-                };
-            }
-            else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+                },
+
+            };
+
+            chartOptions = new ChartOptionInformation()
             {
-                chartInfo = new List<ChartResponseInformation>{
-                    new ChartResponseInformation()
-                    {
-                        name = "AVG Time",
-                        data = new[]
-                        {
-                            $"{MinuteToDecimal(3, 15):##.##}",
-                            $"{MinuteToDecimal(12, 00):##.##}",
-                            $"{MinuteToDecimal(8, 0):##.##}",
-                            $"{MinuteToDecimal(4, 0):##.##}",
-                            $"{MinuteToDecimal(10, 25):##.##}",
-                            $"{MinuteToDecimal(22, 24):##.##}",
-                            $"{MinuteToDecimal(9, 12):##.##}",
-                        }
-                    },
-
-                };
-
-                chartOptions = new ChartOptionInformation()
+                X_axisCategoryType = "category",
+                X_axisCategories = new[]
                 {
-                    X_axisCategoryType = "category",
-                    X_axisCategories = new[]
-                    {
-                        "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
-                    }
-                };
-            }
-            else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+                    "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
+                }
+            };
+
+            //if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            //{
+
+            //}
+            //else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            //{
+            //    chartInfo = new List<ChartResponseInformation>{
+            //        new ChartResponseInformation()
+            //        {
+            //            name = "AVG Time",
+            //            data = new[]
+            //            {
+            //                $"{MinuteToDecimal(3, 15):##.##}",
+            //                $"{MinuteToDecimal(12, 00):##.##}",
+            //                $"{MinuteToDecimal(8, 0):##.##}",
+            //                $"{MinuteToDecimal(4, 0):##.##}",
+            //                $"{MinuteToDecimal(10, 25):##.##}",
+            //                $"{MinuteToDecimal(22, 24):##.##}",
+            //                $"{MinuteToDecimal(9, 12):##.##}",
+            //            }
+            //        },
+
+            //    };
+
+            //    chartOptions = new ChartOptionInformation()
+            //    {
+            //        X_axisCategoryType = "category",
+            //        X_axisCategories = new[]
+            //        {
+            //            "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
+            //        }
+            //    };
+            //}
+            //else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            //{
+            //    chartInfo = new List<ChartResponseInformation>{
+            //        new ChartResponseInformation()
+            //        {
+            //            name = "AVG Time",
+            //            data = new[]
+            //            {
+            //                $"{MinuteToDecimal(8, 0):##.##}",
+            //                $"{MinuteToDecimal(4, 0):##.##}",
+            //                $"{MinuteToDecimal(10, 25):##.##}",
+            //                $"{MinuteToDecimal(3, 15):##.##}",
+            //                $"{MinuteToDecimal(12, 00):##.##}",
+            //                $"{MinuteToDecimal(9, 12):##.##}",
+            //                $"{MinuteToDecimal(23, 24):##.##}",
+            //            }
+            //        },
+
+            //    };
+
+            //    chartOptions = new ChartOptionInformation()
+            //    {
+            //        X_axisCategoryType = "category",
+            //        X_axisCategories = new[]
+            //        {
+            //            "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
+            //        }
+            //    };
+            //}
+            //else
+            //{
+            //    chartInfo = new List<ChartResponseInformation>{
+            //        new ChartResponseInformation()
+            //        {
+            //            name = "AVG Time",
+            //            data = new[]
+            //            {
+            //                $"{MinuteToDecimal(3, 15):##.##}",
+            //                $"{MinuteToDecimal(22, 24):##.##}",
+            //                $"{MinuteToDecimal(9, 12):##.##}",
+            //                $"{MinuteToDecimal(4, 0):##.##}",
+            //                $"{MinuteToDecimal(10, 25):##.##}",
+            //                $"{MinuteToDecimal(12, 00):##.##}",
+            //                $"{MinuteToDecimal(8, 0):##.##}",
+            //            }
+            //        },
+
+            //    };
+
+            //    chartOptions = new ChartOptionInformation()
+            //    {
+            //        X_axisCategoryType = "category",
+            //        X_axisCategories = new[]
+            //        {
+            //            "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
+            //        }
+            //    };
+            //}
+
+            var result = new ChartResultResponse();
+
+            if (reqObj.FilterByProjectId != null && reqObj.FilterByProjectId.Length > 0)
             {
-                chartInfo = new List<ChartResponseInformation>{
-                    new ChartResponseInformation()
-                    {
-                        name = "AVG Time",
-                        data = new[]
-                        {
-                            $"{MinuteToDecimal(8, 0):##.##}",
-                            $"{MinuteToDecimal(4, 0):##.##}",
-                            $"{MinuteToDecimal(10, 25):##.##}",
-                            $"{MinuteToDecimal(3, 15):##.##}",
-                            $"{MinuteToDecimal(12, 00):##.##}",
-                            $"{MinuteToDecimal(9, 12):##.##}",
-                            $"{MinuteToDecimal(23, 24):##.##}",
-                        }
-                    },
-
-                };
-
-                chartOptions = new ChartOptionInformation()
+                foreach (var project in reqObj.FilterByProjectId)
                 {
-                    X_axisCategoryType = "category",
-                    X_axisCategories = new[]
+                    var projectIndex = Array.IndexOf(chartOptions.X_axisCategories, project);
+
+                    result = new ChartResultResponse()
                     {
-                        "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
-                    }
-                };
+                        ChartInfo = chartInfo.Select(x => new ChartResponseInformation()
+                        {
+                            name = x.name,
+                            titile = x.titile,
+                            data = new []
+                            {
+                                x.data[projectIndex].ToString()
+                            }
+                        })
+                        ,
+                        ChartOptions = new ChartOptionInformation()
+                        {
+                            X_axisCategoryType = chartOptions.X_axisCategoryType,
+                            X_axisCategories = chartOptions.X_axisCategories
+                                .Where(x => x.ToUpper() == project.ToUpper().Trim()).ToArray()
+                        }
+                    };
+                }
             }
             else
             {
-                chartInfo = new List<ChartResponseInformation>{
-                    new ChartResponseInformation()
-                    {
-                        name = "AVG Time",
-                        data = new[]
-                        {
-                            $"{MinuteToDecimal(3, 15):##.##}",
-                            $"{MinuteToDecimal(22, 24):##.##}",
-                            $"{MinuteToDecimal(9, 12):##.##}",
-                            $"{MinuteToDecimal(4, 0):##.##}",
-                            $"{MinuteToDecimal(10, 25):##.##}",
-                            $"{MinuteToDecimal(12, 00):##.##}",
-                            $"{MinuteToDecimal(8, 0):##.##}",
-                        }
-                    },
-
-                };
-
-                chartOptions = new ChartOptionInformation()
+                result = new ChartResultResponse()
                 {
-                    X_axisCategoryType = "category",
-                    X_axisCategories = new[]
-                    {
-                        "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
-                    }
+                    ChartInfo = chartInfo,
+                    ChartOptions = chartOptions
                 };
             }
-
-
-            var result = new ChartResultResponse()
-            {
-                ChartInfo = chartInfo,
-                ChartOptions = chartOptions
-            };
-
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -924,7 +964,7 @@ namespace DashbordApplication.Controllers
                         name = "Coding Review",
                         data = new[]
                         {
-                            "54","22", "23", "12", "34", 
+                            "54","22", "23", "12", "34",
                         }
                     }
                 };
@@ -1082,11 +1122,28 @@ namespace DashbordApplication.Controllers
                 };
             }
 
-            var result = new ChartResultResponse()
+            var result = new ChartResultResponse();
+
+            if (reqObj.FilterByProjectId != null && reqObj.FilterByProjectId.Length > 0)
             {
-                ChartInfo = chartInfo,
-                ChartOptions = chartOptions
-            };
+                foreach (var projectId in reqObj.FilterByProjectId)
+                {
+                    result = new ChartResultResponse()
+                    {
+                        ChartInfo = chartInfo.Where(x => x.name.ToUpper() == projectId.ToUpper()),
+                        ChartOptions = chartOptions
+                    };
+                }
+            }
+            else
+            {
+                result = new ChartResultResponse()
+                {
+                    ChartInfo = chartInfo,
+                    ChartOptions = chartOptions
+                };
+
+            }
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -1097,7 +1154,7 @@ namespace DashbordApplication.Controllers
             var chartInfo = new List<ChartResponseInformation>();
 
             var chartOptions = new ChartOptionInformation();
-           
+
             if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
             {
                 chartInfo = new List<ChartResponseInformation> {
@@ -1183,11 +1240,45 @@ namespace DashbordApplication.Controllers
                 };
             }
 
-            var result = new ChartResultResponse()
+            var result = new ChartResultResponse();
+            if (reqObj.FilterByUserId != null && reqObj.FilterByUserId.Length > 0)
             {
-                ChartInfo = chartInfo,
-                ChartOptions = chartOptions
-            };
+                foreach (var userId in reqObj.FilterByUserId)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        var userNameIndex = Array.IndexOf(chartOptions.X_axisCategories, userId.ToUpper().Trim());
+
+                        
+                        result = new ChartResultResponse()
+                        {
+                            ChartInfo = chartInfo.Select(x => new ChartResponseInformation
+                            {
+                                name = x.name,
+                                titile = x.titile,
+                                data = new[]
+                                {
+                                    x.data[userNameIndex].ToString()
+                                }
+                            }),
+                            ChartOptions = new ChartOptionInformation()
+                            {
+                                X_axisCategoryType = chartOptions.X_axisCategoryType,
+                                X_axisCategories = chartOptions.X_axisCategories.Where(x => x.ToUpper() == userId.ToUpper().Trim()).ToArray()
+                            }
+                        };
+                    }
+                }
+
+            }
+            else
+            {
+                result = new ChartResultResponse()
+                {
+                    ChartInfo = chartInfo,
+                    ChartOptions = chartOptions
+                };
+            }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -1198,7 +1289,7 @@ namespace DashbordApplication.Controllers
 
 
             var chartOptions = new ChartOptionInformation();
-            
+
             if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
             {
                 chartInfo = new List<ChartResponseInformation>
@@ -1287,7 +1378,7 @@ namespace DashbordApplication.Controllers
                     }
                 };
             }
-            
+
             var result = new ChartResultResponse()
             {
                 ChartInfo = chartInfo,

@@ -14,7 +14,7 @@
         function () {
 
         });
-
+    
     LoadAllChart();
 
     $('body').on('click',
@@ -55,33 +55,96 @@
         function () {
             UpdateSessionTimeChart($(this).data('reqtype'));
         });
+    $('body').on('change',
+        '#ddlUserSessionChart',
+        function () {
+            UpdateSessionChart();
+        });
+
+    $('body').on('change',
+        '#ddlProjectSessionByUserByModule',
+        function () {
+            //console.log($('#ddlProjectSessionByUserByModule').val())
+            UpdateSessionAvgTimeByUserByModule();
+        });
+    $('body').on('change',
+        '#ddlProjectAvgTimeModule',
+        function () {
+            UpdateAvgTimeChartByModule();
+        });
     
+
+    $('#ddlUserSessionChart').multipleSelect({
+        placeholder: 'Select User'
+    });
+    $('#ddlProjectSessionByUserByModule').multipleSelect({
+        placeholder: 'Select Project'
+    });
+
+    $('#ddlProjectAvgTimeModule').multipleSelect({
+        placeholder: 'Select Project'
+    });
+
+    $('body').on('click',
+        '.dataModalPopup',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#dataExportModal').modal();
+        });
 });
-
-
 
 
 var assignedBarChartOptions = {
     series: [],
     chart: {
-        height: 350,
-        type: 'radialBar',
-        toolbar: {
-            show: false
-        }
+        width: 380,
+        type: 'donut',
     },
-    plotOptions: {
-        radialBar: {
-            hollow: {
-                size: '70%',
-            }
-        },
+    dataLabels: {
+        enabled: false
     },
-    labels: ['Assigned'],
+    fill: {
+        type: 'gradient',
+    },
     noData: {
-        text: 'loading...'
-    }
+        text: 'Loading...'
+    },
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            chart: {
+                width: 200
+            },
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }],
+    labels: []
 };
+
+
+//var assignedBarChartOptions = {
+//    series: [],
+//    chart: {
+//        height: 350,
+//        type: 'radialBar',
+//        toolbar: {
+//            show: false
+//        }
+//    },
+//    plotOptions: {
+//        radialBar: {
+//            hollow: {
+//                size: '70%',
+//            }
+//        },
+//    },
+//    labels: ['Assigned'],
+//    noData: {
+//        text: 'loading...'
+//    }
+//};
 
 // Assigned radial bar chart Ends
 
@@ -517,7 +580,10 @@ function LoadAllChart() {
 
 
     $.getJSON('/Home/AssignedLicenseBarChartResult', function (response) {
-        assignedRadialBarChart.updateSeries([response]);
+        assignedRadialBarChart.updateOptions({
+            labels: response.LabelData
+        });
+        assignedRadialBarChart.updateSeries(response.serisData);
     });
 
     userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
@@ -585,7 +651,7 @@ function LoadAllChart() {
     //});
 
 
-     avgTimeSpentModuleChart =
+    avgTimeSpentModuleChart =
         new ApexCharts(document.querySelector("#avgTimeSpentModule"), avgTimeSpentModuleOpt);
     avgTimeSpentModuleChart.render();
     UpdateAvgTimeSpentChartByModule('yearly');
@@ -710,12 +776,14 @@ function UpdateUserOverTime(requestType = 'yearly') {
 }
 
 function UpdateAvgTimeChartByModule(requestType = 'yearly') {
+    
     var reqObj = {
         StartDate: null,
         EndDate: null,
-        RequestType: requestType
+        RequestType: requestType,
+        FilterByProjectId: $('#ddlProjectAvgTimeModule').val()
     };
-
+    
     $.ajax({
         url: '/Home/AvgTimeModuleChartResult',
         type: 'POST',
@@ -776,7 +844,8 @@ function UpdateSessionAvgTimeByUserByModule(requestType = 'yearly') {
     var reqObj = {
         StartDate: null,
         EndDate: null,
-        RequestType: requestType
+        RequestType: requestType,
+        FilterByProjectId: $('#ddlProjectSessionByUserByModule').val()
     };
 
     $.ajax({
@@ -802,16 +871,18 @@ function UpdateSessionChart(requestType = 'yearly') {
     var reqObj = {
         StartDate: null,
         EndDate: null,
-        RequestType: requestType
+        RequestType: requestType,
+        FilterByUserId: $('#ddlUserSessionChart').val()
     };
 
     $.ajax({
-        url: '/Home/SessionAvgTimeByUserByModuleChartResult',
+        url: '/Home/SessionChartResult',
         type: 'POST',
         dataType: 'JSON',
         data: JSON.stringify(reqObj),
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
+            console.log(response);
             sessionChart.updateOptions({
                 xaxis: {
                     type: response.ChartOptions.X_axisCategoryType,
@@ -837,7 +908,7 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
         dataType: 'JSON',
         data: JSON.stringify(reqObj),
         contentType: 'application/json; charset=utf-8',
-        success: function(response) {
+        success: function (response) {
             sessionTimeChart.updateOptions({
                 xaxis: {
                     type: response.ChartOptions.X_axisCategoryType,

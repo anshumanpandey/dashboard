@@ -10,5 +10,7 @@ namespace DashbordApplication.Models
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string RequestType { get; set; }
+        public string[] FilterByUserId { get; set; }
+        public string[] FilterByProjectId { get; set; }
     }
 }
