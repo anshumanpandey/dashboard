@@ -130,6 +130,8 @@
     <Compile Include="Models\ChartResultResponse.cs" />
     <Compile Include="Models\DataTypeEnum.cs" />
     <Compile Include="Models\LicenseInformation.cs" />
+    <Compile Include="Models\ModuleInformation.cs" />
+    <Compile Include="Models\UserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

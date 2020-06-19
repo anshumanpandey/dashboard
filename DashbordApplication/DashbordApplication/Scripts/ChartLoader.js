@@ -58,6 +58,7 @@
     $('body').on('change',
         '#ddlUserSessionChart',
         function () {
+            console.log('Hello');
             UpdateSessionChart();
         });
 
@@ -72,19 +73,11 @@
         function () {
             UpdateAvgTimeChartByModule();
         });
+
+    PopulateUsersDDL();
+
+    PopulateModulesDDL();
     
-
-    $('#ddlUserSessionChart').multipleSelect({
-        placeholder: 'Select User'
-    });
-    $('#ddlProjectSessionByUserByModule').multipleSelect({
-        placeholder: 'Select Project'
-    });
-
-    $('#ddlProjectAvgTimeModule').multipleSelect({
-        placeholder: 'Select Project'
-    });
-
     $('body').on('click',
         '.dataModalPopup',
         function () {
@@ -120,7 +113,8 @@ var assignedBarChartOptions = {
             }
         }
     }],
-    labels: []
+    labels: [],
+    colors: ['#008000', '#D3D3D3']
 };
 
 
@@ -875,6 +869,8 @@ function UpdateSessionChart(requestType = 'yearly') {
         FilterByUserId: $('#ddlUserSessionChart').val()
     };
 
+    //console.log($('#ddlUserSessionChart').multipleSelect('getSelects'));
+
     $.ajax({
         url: '/Home/SessionChartResult',
         type: 'POST',
@@ -920,4 +916,44 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
         }
 
     });
+}
+
+function PopulateUsersDDL() {
+    $('#ddlUserSessionChart').multipleSelect({
+        placeholder: 'Select User'
+    });
+    $.getJSON('/Home/GetUsers',
+        function (response) {
+            var s = '';
+            for (var i = 0; i < response.length; i++) {
+                s += '<option value="' + response[i].Id + '">' + response[i].UserName + '</option>';
+            }
+            $("#ddlUserSessionChart").html(s);  
+            $('#ddlUserSessionChart').multipleSelect('refresh');
+        });
+    
+}
+
+function PopulateModulesDDL() {
+    $('#ddlProjectSessionByUserByModule').multipleSelect({
+        placeholder: 'Select Module',
+    });
+
+    $('#ddlProjectAvgTimeModule').multipleSelect({
+        placeholder: 'Select Module',
+    });
+
+    $.getJSON('/Home/GetModules',
+        function (response) {
+            var s = '';
+            for (var i = 0; i < response.length; i++) {
+                s += '<option value="' + response[i].ModuleId + '">' + response[i].ModuleName + '</option>';
+            }
+            $("#ddlProjectSessionByUserByModule").html(s);
+            $('#ddlProjectSessionByUserByModule').multipleSelect('refresh');
+            
+            $("#ddlProjectAvgTimeModule").html(s);
+            $('#ddlProjectAvgTimeModule').multipleSelect('refresh');
+
+        });
 }
