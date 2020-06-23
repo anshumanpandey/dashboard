@@ -12,9 +12,19 @@
     $('body').on('click',
         '#btnSearch',
         function () {
+            UpdateUserLicenseChart();
+            UpdateUserOverTime();
+            UpdateAvgTimeChartByModule();
+            UpdateTotalTimeSpentChartByModule();
+            UpdateSessionAvgTimeByUserByModule();
+            UpdateSessionChart();
+            UpdateSessionTimeChart();
 
+            PopulateUsersDDL();
+
+            PopulateModulesDDL();
         });
-    
+
     LoadAllChart();
 
     $('body').on('click',
@@ -38,7 +48,7 @@
     $('body').on('click',
         '.avgTimeSpentModuleButton',
         function () {
-            UpdateAvgTimeSpentChartByModule($(this).data('reqtype'));
+            UpdateTotalTimeSpentChartByModule($(this).data('reqtype'));
         });
     $('body').on('click',
         '.sessionAvgTimeByUserByModuleButton',
@@ -58,12 +68,12 @@
     $('body').on('change',
         '#ddlUserSessionChart',
         function () {
-            console.log('Hello');
+
             UpdateSessionChart();
         });
 
     $('body').on('change',
-        '#ddlProjectSessionByUserByModule',
+        '#ddlUserSessionByUserByModule',
         function () {
             //console.log($('#ddlProjectSessionByUserByModule').val())
             UpdateSessionAvgTimeByUserByModule();
@@ -73,16 +83,81 @@
         function () {
             UpdateAvgTimeChartByModule();
         });
+    $('#ddlUserSessionChart').multipleSelect({
+        placeholder: 'Select User'
+    });
+    $('#ddlUserSessionByUserByModule').multipleSelect({
+        placeholder: 'Select User'
+    });
+    $('#ddlProjectAvgTimeModule').multipleSelect({
+        placeholder: 'Select Module',
+    });
 
     PopulateUsersDDL();
 
     PopulateModulesDDL();
-    
+
     $('body').on('click',
         '.dataModalPopup',
         function () {
             $('.modal-title').text($(this).data('title'));
             $('#dataExportModal').modal();
+        });
+
+    $('body').on('click',
+        '.licenseInformationModalPopUp',
+        function() {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalLicenseInformation').modal();
+        });
+
+    $('body').on('click',
+        '.usersLicenseInfoModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalUsersLicenseInformation').modal();
+        });
+
+    $('body').on('click',
+        '.userOverTimeModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalUserOverTime').modal();
+        });
+    $('body').on('click',
+        '.avgTimeModuleModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalAvgTimeModule').modal();
+        });
+    
+
+    $('body').on('click',
+        '.totalTimeSpentModuleModalPopup',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalTotalTimeSpentModule').modal();
+        });
+
+    $('body').on('click',
+        '.sessionAvgByUserModuleModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalSessionAvgByUserModule').modal();
+        });
+
+    $('body').on('click',
+        '.sessionChartModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalSessionChart').modal();
+        });
+
+    $('body').on('click',
+        '.sessionTimeChartModalPopUp',
+        function () {
+            $('.modal-title').text($(this).data('title'));
+            $('#modalSessionTimeChart').modal();
         });
 });
 
@@ -92,6 +167,19 @@ var assignedBarChartOptions = {
     chart: {
         width: 380,
         type: 'donut',
+        toolbar: {
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
+        },
     },
     dataLabels: {
         enabled: false
@@ -158,7 +246,17 @@ var userChartOptions = {
         height: 350,
         stacked: true,
         toolbar: {
-            show: false
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
         },
         zoom: {
             enabled: true
@@ -237,7 +335,17 @@ var avgTimeByModuleChartOptions = {
         height: 350,
         type: 'bar',
         toolbar: {
-            show: false
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
         },
     },
     noData: {
@@ -330,7 +438,17 @@ var sessionAvgTimeByUserByModuleOpt = {
         height: 350,
         stacked: true,
         toolbar: {
-            show: false
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
         },
         zoom: {
             enabled: true
@@ -401,7 +519,17 @@ var userOverTimeOpt = {
         height: 350,
         stacked: true,
         toolbar: {
-            show: false
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
         },
         events: {
             legendClick: function (chartContext, seriesIndex, config) {
@@ -456,8 +584,18 @@ var avgTimeSpentModuleOpt = {
         height: 350,
         stacked: true,
         toolbar: {
-            show: false
-        }
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
+        },
     },
     noData: {
         text: 'Loading...'
@@ -497,7 +635,17 @@ var sessionChartOpt = {
         type: 'bar',
         height: 350,
         toolbar: {
-            show: false
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
         },
     },
     noDate: {
@@ -545,8 +693,18 @@ var sessionTimeChartOpt = {
             enabled: false
         },
         toolbar: {
-            show: false
-        }
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+            },
+        },
     },
     noData: {
         text: 'Loading...'
@@ -574,10 +732,24 @@ function LoadAllChart() {
 
 
     $.getJSON('/Home/AssignedLicenseBarChartResult', function (response) {
+
         assignedRadialBarChart.updateOptions({
             labels: response.LabelData
         });
         assignedRadialBarChart.updateSeries(response.serisData);
+
+        $('#lblNoOfUnusedLicense').html(response.licenseInfo.NoOfUnusedLicense);
+        $('#lblNofUsedLicense').html(response.licenseInfo.NoOfUsedLicense);
+
+        // Table generation code
+
+        var table = $("#tblLicenseInformation tbody");
+
+        table.append("<tr>" +
+            "<td>" + ( parseInt(response.licenseInfo.NoOfUnusedLicense) + parseInt(response.licenseInfo.NoOfUsedLicense)) + "</td>" +
+            "<td>" + response.licenseInfo.NoOfUnusedLicense + "</td>" +
+            "<td>" + response.licenseInfo.NoOfUsedLicense + "</td>" +
+            "</tr>");
     });
 
     userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
@@ -648,7 +820,7 @@ function LoadAllChart() {
     avgTimeSpentModuleChart =
         new ApexCharts(document.querySelector("#avgTimeSpentModule"), avgTimeSpentModuleOpt);
     avgTimeSpentModuleChart.render();
-    UpdateAvgTimeSpentChartByModule('yearly');
+    UpdateTotalTimeSpentChartByModule('yearly');
     //$.getJSON('/Home/AvgSpentTimeByModuleChartResult', function (response) {
 
     //    avgTimeSpentModuleChart.updateOptions({
@@ -712,8 +884,8 @@ function LoadAllChart() {
 
 function UpdateUserLicenseChart(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType
     };
 
@@ -727,8 +899,8 @@ function UpdateUserLicenseChart(requestType = 'yearly') {
             //userChart.destroy();
 
             $('#lblNoOfLicenseAllocated').html(response.LicenseInfo.TotalNodLicenseAllocated);
-            $('#lblNoOfUnusedLicense').html(response.LicenseInfo.NoOfUnusedLicense);
-            $('#lblNofUsedLicense').html(response.LicenseInfo.NoOfUsedLicense);
+            //$('#lblNoOfUnusedLicense').html(response.LicenseInfo.NoOfUnusedLicense);
+            //$('#lblNofUsedLicense').html(response.LicenseInfo.NoOfUsedLicense);
 
             userChart.updateOptions({
                 xaxis: {
@@ -738,14 +910,47 @@ function UpdateUserLicenseChart(requestType = 'yearly') {
             });
 
             userChart.updateSeries(response.ChartInfo);
+
+            //table generation
+            var tableBody = $('#tbUserLicenseInformation tbody');
+            tableBody.empty();
+
+            $.each(response.UsersLicenseInformationTableData,
+                function(i, data) {
+                    tableBody.append('<tr>' +
+                        '<td>' +
+                        data.Month +
+                        '</td>' +
+                        '<td>' +
+                        data.Week +
+                        '</td>' +
+                        '<td>' +
+                        data.Day +
+                        '</td>' +
+                        '<td>' +
+                        data.DistinctYear +
+                        '</td>' +
+                        '<td>' +
+                        data.LicenseCount +
+                        '</td>' +
+                        '<td>' +
+                        data.UnusedLicense +
+                        '</td>' +
+                        '<td>' +
+                        data.UsedLicense +
+                        '</td>' +
+                        '</tr>');
+                });
         }
     });
+
+
 }
 
 function UpdateUserOverTime(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType
     };
 
@@ -756,7 +961,7 @@ function UpdateUserOverTime(requestType = 'yearly') {
         data: JSON.stringify(reqObj),
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
-
+            
             userOverTimeChart.updateOptions({
                 xaxis: {
                     type: response.ChartOptions.X_axisCategoryType,
@@ -765,19 +970,29 @@ function UpdateUserOverTime(requestType = 'yearly') {
             });
 
             userOverTimeChart.updateSeries(response.ChartInfo);
+            var usersOverTimeTable = $('#tblUserOverTime tbody');
+            usersOverTimeTable.empty();
+
+            $.each(response.UsersCountInformation,
+                function(i, data) {
+                    usersOverTimeTable.append('<tr>' +
+                        '<td>'+data.UserName+'</td>' +
+                        '<td>'+data.ActivityCount+'</td>' +
+                        '</tr>')
+                });
         }
     });
 }
 
 function UpdateAvgTimeChartByModule(requestType = 'yearly') {
-    
+
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType,
         FilterByProjectId: $('#ddlProjectAvgTimeModule').val()
     };
-    
+
     $.ajax({
         url: '/Home/AvgTimeModuleChartResult',
         type: 'POST',
@@ -804,19 +1019,30 @@ function UpdateAvgTimeChartByModule(requestType = 'yearly') {
                     }
                 },
             });
+
+            var tableHeader = $('#tblAvgTimeModule thead tr');
+            tableHeader.empty();
+
+            var tableBody = $('#tblAvgTimeModule tbody');
+            tableBody.empty();
+            $.each(response.UserModuleTimeSpanInformation,
+                function (i, data) {
+                    tableHeader.append('<th>' + data.ModuleName + '</th>');
+                    tableBody.append('<td>' + data.AvgTimeSpan + '</td>');
+                });
         }
     });
 }
 
-function UpdateAvgTimeSpentChartByModule(requestType = 'yearly') {
+function UpdateTotalTimeSpentChartByModule(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType
     };
 
     $.ajax({
-        url: '/Home/AvgSpentTimeByModuleChartResult',
+        url: '/Home/TotalTimeSpentByModuleChartResult',
         type: 'POST',
         dataType: 'JSON',
         data: JSON.stringify(reqObj),
@@ -830,16 +1056,27 @@ function UpdateAvgTimeSpentChartByModule(requestType = 'yearly') {
             });
 
             avgTimeSpentModuleChart.updateSeries(response.ChartInfo);
+
+            var totalTimeSpentTableHeader = $('#tblTotalTimeSpentModule thead tr');
+            totalTimeSpentTableHeader.empty();
+
+            var tableBody = $('#tblTotalTimeSpentModule tbody');
+            tableBody.empty();
+            $.each(response.UserModuleTimeSpanInformation,
+                function (i, data) {
+                    totalTimeSpentTableHeader.append('<th>' + data.ModuleName + '</th>');
+                    tableBody.append('<td>' + data.AvgTimeSpan + '</td>');
+                });
         }
     });
 }
 
 function UpdateSessionAvgTimeByUserByModule(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType,
-        FilterByProjectId: $('#ddlProjectSessionByUserByModule').val()
+        FilterByUserId: $('#ddlUserSessionByUserByModule').val()
     };
 
     $.ajax({
@@ -857,14 +1094,33 @@ function UpdateSessionAvgTimeByUserByModule(requestType = 'yearly') {
             });
 
             sessionAvgTimeByUserByModuleChart.updateSeries(response.ChartInfo);
+
+            //table header Geneartion
+
+            var sessionAvgByUserByModal = $('#tblSessionAvgByUserModule tbody');
+            sessionAvgByUserByModal.empty();
+
+            $.each(response.UserModuleInformation,
+                function (i, data) {
+                    sessionAvgByUserByModal.append('<tr>' +
+                        '<td>'+data.UserName+'</td>' +
+                        '<td>'+data.QAP+'</td>' +
+                        '<td>'+data.ME+'</td>' +
+                        '<td>'+data.MEO+'</td>' +
+                        '<td>'+data.SJR1+'</td>' +
+                        '<td>'+data.SJROutcome+'</td>' +
+                        '<td>'+data.SJR2+'</td>' +
+                        '<td>' + data.CodingReview+'</td>' +
+                        '</tr>');
+                });
         }
     });
 }
 
 function UpdateSessionChart(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType,
         FilterByUserId: $('#ddlUserSessionChart').val()
     };
@@ -878,7 +1134,7 @@ function UpdateSessionChart(requestType = 'yearly') {
         data: JSON.stringify(reqObj),
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
-            console.log(response);
+            //console.log(response);
             sessionChart.updateOptions({
                 xaxis: {
                     type: response.ChartOptions.X_axisCategoryType,
@@ -887,14 +1143,27 @@ function UpdateSessionChart(requestType = 'yearly') {
             });
 
             sessionChart.updateSeries(response.ChartInfo);
+
+            // table section
+            var tableHeader = $('#tblSessionChart thead tr');
+            tableHeader.empty();
+
+            var tableBody = $('#tblSessionChart tbody');
+            tableBody.empty();
+
+            $.each(response.UserSessionCountInformation,
+                function(i, data) {
+                    tableHeader.append('<th>' + data.UserName + '</th>');
+                    tableBody.append('<td>' + data.SessionCount + '</td>');
+                });
         }
     });
 }
 
 function UpdateSessionTimeChart(requestType = 'yearly') {
     var reqObj = {
-        StartDate: null,
-        EndDate: null,
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val(),
         RequestType: requestType
     };
 
@@ -913,47 +1182,144 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
             });
 
             sessionTimeChart.updateSeries(response.ChartInfo);
+
+            var tableBody = $('#tblSessionTimeChart tbody');
+            tableBody.empty();
+
+            $.each(response.UserModuleTimeSpanInformation,
+                function (i, data) {
+                    tableBody.append('<tr>' +
+                        '<td>' + data.ID + '</td>' +
+                        '<td>' + data.PatientID + '</td>' +
+                        '<td>' + data.ModuleName + '</td>' +
+                        '<td>' + data.UserName + '</td>' +
+                        '<td>' + data.StartTime + '</td>' +
+                        '<td>' + data.EndTime + '</td>' +
+                        '<td>' + data.Year + '</td>' +
+                        '<td>' + data.Month + '</td>' +
+                        '<td>' + data.Quarter + '</td>' +
+                        '<td>' + data.Week + '</td>' +
+                        '<td>' + data.TimeSpan + '</td>' +
+                        '<td>' + data.ActivityCount + '</td>' +
+                        '</tr>');
+                    
+                });
         }
 
     });
 }
 
 function PopulateUsersDDL() {
-    $('#ddlUserSessionChart').multipleSelect({
-        placeholder: 'Select User'
-    });
-    $.getJSON('/Home/GetUsers',
-        function (response) {
+
+
+    var reqObj = {
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val()
+    };
+
+    $.ajax({
+        url: '/Home/GetSessionChartUsers',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+
+
+           
             var s = '';
             for (var i = 0; i < response.length; i++) {
                 s += '<option value="' + response[i].Id + '">' + response[i].UserName + '</option>';
             }
-            $("#ddlUserSessionChart").html(s);  
+            $("#ddlUserSessionChart").html(s);
             $('#ddlUserSessionChart').multipleSelect('refresh');
-        });
-    
+
+        }
+    });
+
+    $.ajax({
+        url: '/Home/GetUsers',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+
+            var s = '';
+            for (var i = 0; i < response.length; i++) {
+                s += '<option value="' + response[i].Id + '">' + response[i].UserName + '</option>';
+            }
+
+            $("#ddlUserSessionByUserByModule").html(s);
+            $('#ddlUserSessionByUserByModule').multipleSelect('refresh');
+
+        }
+    })
+
+    //$.getJSON('/Home/GetSessionChartUsers',
+    //    function (response) {
+    //        var s = '';
+    //        for (var i = 0; i < response.length; i++) {
+    //            s += '<option value="' + response[i].Id + '">' + response[i].UserName + '</option>';
+    //        }
+    //        $("#ddlUserSessionChart").html(s);  
+    //        $('#ddlUserSessionChart').multipleSelect('refresh');
+
+
+    //    });
+    //$.getJSON('/Home/GetUsers',
+    //                                function (response) {
+    //                                    var s = '';
+    //                                    for (var i = 0; i < response.length; i++) {
+    //                                        s += '<option value="' + response[i].Id + '">' + response[i].UserName + '</option>';
+    //                                    }
+
+    //                                    $("#ddlUserSessionByUserByModule").html(s);
+    //                                    $('#ddlUserSessionByUserByModule').multipleSelect('refresh');
+    //                                });
 }
 
 function PopulateModulesDDL() {
-    $('#ddlProjectSessionByUserByModule').multipleSelect({
-        placeholder: 'Select Module',
-    });
 
-    $('#ddlProjectAvgTimeModule').multipleSelect({
-        placeholder: 'Select Module',
-    });
 
-    $.getJSON('/Home/GetModules',
-        function (response) {
+    var reqObj = {
+        StartDate: $('#startDate').val(),
+        EndDate: $('#endDate').val()
+    };
+
+    $.ajax({
+        url: '/Home/GetModules',
+        type: 'POST',
+        dataType: 'JSON',
+        data: JSON.stringify(reqObj),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+
             var s = '';
             for (var i = 0; i < response.length; i++) {
                 s += '<option value="' + response[i].ModuleId + '">' + response[i].ModuleName + '</option>';
             }
-            $("#ddlProjectSessionByUserByModule").html(s);
-            $('#ddlProjectSessionByUserByModule').multipleSelect('refresh');
-            
+
+
             $("#ddlProjectAvgTimeModule").html(s);
             $('#ddlProjectAvgTimeModule').multipleSelect('refresh');
 
-        });
+            
+        }
+    });
+
+    //$.getJSON('/Home/GetModules',
+    //    function (response) {
+    //        var s = '';
+    //        for (var i = 0; i < response.length; i++) {
+    //            s += '<option value="' + response[i].ModuleId + '">' + response[i].ModuleName + '</option>';
+    //        }
+
+
+    //        $("#ddlProjectAvgTimeModule").html(s);
+    //        $('#ddlProjectAvgTimeModule').multipleSelect('refresh');
+
+    //    });
+
+
 }

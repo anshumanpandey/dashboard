@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DashbordApplication.Models;
+using NHS.Common;
+using NHS.Data;
+using LicenseUsage = DashbordApplication.Models.LicenseUsage;
 
 namespace DashbordApplication.Controllers
 {
@@ -16,19 +21,54 @@ namespace DashbordApplication.Controllers
             return View();
         }
 
+        #region Chart Load
+
+        //https://www.jqueryscript.net/form/jQuery-Plugin-For-Selecting-Multiple-Elements-Multiple-Select.html
+
+
         [HttpGet]
         public JsonResult AssignedLicenseBarChartResult(ChartLoadRequestObject reqObj)
         {
-            var result = new
+            DateTime startDate = System.DateTime.Now.AddDays(-365);
+            DateTime endDate = System.DateTime.Now;
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<NHS.Common.LicenseUsage> usage = dBEngine.GetUserCount(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            var filteredUsages = new List<LicenseUsage>();
+            var noOfTotalUsedLicense = 0;
+            foreach (var data in usage.GroupBy(x => x.DistinctYear).ToList())
             {
-                serisData = new[]
+                noOfTotalUsedLicense += data.Sum(x => x.UsedLicense);
+                var licenseData = new LicenseUsage()
                 {
-                    30, 70
-                },
-                LabelData = new[]
+                    DistinctYear = data.Key,
+                    LicenseCount = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                    UnusedLicense = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - noOfTotalUsedLicense,
+                    UsedLicense = data.Sum(x => x.UsedLicense)
+                };
+                filteredUsages.Add(licenseData);
+            }
+
+            var licenseInfo = new LicenseInformation
+            {
+                //TotalNodLicenseAllocated = yearlyResult.LicenseCount.ToString(),
+                NoOfUsedLicense = filteredUsages.Sum(x => x.UsedLicense).ToString(),
+                NoOfUnusedLicense = (filteredUsages.FirstOrDefault().LicenseCount - filteredUsages.Sum(x => x.UsedLicense)).ToString(),
+            };
+
+            var serisData = new[]
+                {
+                  Convert.ToInt32(licenseInfo.NoOfUsedLicense),Convert.ToInt32(licenseInfo.NoOfUnusedLicense)
+                };
+            var LabelData = new[]
                 {
                     "Used", "Unused"
-                }
+                };
+            var result = new
+            {
+                serisData,
+                LabelData,
+                licenseInfo
             };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -36,73 +76,160 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult UserLicenseChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<NHS.Common.LicenseUsage> usage = dBEngine.GetUserCount(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+            List<NHS.Common.LicenseUsage> filteredUsages = new List<NHS.Common.LicenseUsage>();
+
+
+            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            {
+                //filteredUsages = usage.GroupBy(x => x.DistinctYear)
+                //    .Select(y => new LicenseUsage
+                //    {
+                //        DistinctYear = y.Key,
+                //        LicenseCount = y.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                //        UnusedLicense = y.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - y.Sum(z => z.UsedLicense),
+                //        UsedLicense = y.Sum(z => z.UsedLicense),
+                //    }).ToList();
+                var noOfTotalUsedLicense = 0;
+                foreach (var data in usage.GroupBy(x => x.DistinctYear).ToList())
+                {
+                    noOfTotalUsedLicense += data.Sum(x => x.UsedLicense);
+                    var licenseData = new NHS.Common.LicenseUsage()
+                    {
+                        DistinctYear = data.Key,
+                        LicenseCount = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                        UnusedLicense = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - noOfTotalUsedLicense,
+                        UsedLicense = data.Sum(x => x.UsedLicense)
+                    };
+                    filteredUsages.Add(licenseData);
+                }
+            }
+            else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            {
+                var noOfTotalUsedLicense = 0;
+                foreach (var data in usage.GroupBy(x => x.Month).ToList())
+                {
+                    noOfTotalUsedLicense += data.Sum(x => x.UsedLicense);
+                    var licenseData = new NHS.Common.LicenseUsage()
+                    {
+                        Month = data.Key,
+                        LicenseCount = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                        UnusedLicense = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - noOfTotalUsedLicense,
+                        UsedLicense = data.Sum(x => x.UsedLicense)
+                    };
+                    filteredUsages.Add(licenseData);
+                }
+            }
+            else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            {
+                var noOfTotalUsedLicense = 0;
+                foreach (var data in usage.GroupBy(x => x.Week).ToList())
+                {
+                    noOfTotalUsedLicense += data.Sum(x => x.UsedLicense);
+                    var licenseData = new NHS.Common.LicenseUsage()
+                    {
+                        Week = data.Key,
+                        LicenseCount = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                        UnusedLicense = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - noOfTotalUsedLicense,
+                        UsedLicense = data.Sum(x => x.UsedLicense)
+                    };
+                    filteredUsages.Add(licenseData);
+                }
+            }
+            else if (reqObj.RequestType == DataTypeEnum.daily.ToString())
+            {
+                var noOfTotalUsedLicense = 0;
+                foreach (var data in usage.GroupBy(x => x.Day).ToList())
+                {
+                    noOfTotalUsedLicense += data.Sum(x => x.UsedLicense);
+                    var licenseData = new NHS.Common.LicenseUsage()
+                    {
+                        Day = data.Key,
+                        LicenseCount = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key,
+                        UnusedLicense = data.GroupBy(z => z.LicenseCount).FirstOrDefault().Key - noOfTotalUsedLicense,
+                        UsedLicense = data.Sum(x => x.UsedLicense)
+                    };
+                    filteredUsages.Add(licenseData);
+                }
+            }
+            else
+            {
+                filteredUsages = usage;
+            }
+
             var licenseInfo = new LicenseInformation
             {
-                TotalNodLicenseAllocated = "100",
-                NoOfUsedLicense = "30",
-                NoOfUnusedLicense = "70"
+                TotalNodLicenseAllocated = filteredUsages.FirstOrDefault()?.LicenseCount.ToString(),
+                //NoOfUsedLicense = filteredUsages.FirstOrDefault()?.UsedLicense.ToString(),
+                //NoOfUnusedLicense = filteredUsages.FirstOrDefault()?.UnusedLicense.ToString(),
             };
 
-            var chartInfo = new List<ChartResponseInformation>();
+            var usedData = new List<string>();
+            var unUsedData = new List<string>();
+            var years = new List<string>();
+            var months = new List<string>();
+            var weeks = new List<string>();
+            var days = new List<string>();
 
-            var opt = new ChartOptionInformation();
+            foreach (var row in filteredUsages)
+            {
+                usedData.Add(row.UsedLicense.ToString());
+                unUsedData.Add(row.UnusedLicense.ToString());
+                if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+                {
+                    years.Add(row.DistinctYear);
+                }
+                if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+                {
+                    months.Add(row.Month);
+                }
+                if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+                {
+                    weeks.Add(row.Week);
+                }
+                if (reqObj.RequestType == DataTypeEnum.daily.ToString())
+                {
+                    days.Add(row.Day);
+                }
+            }
 
             List<ChartResponseInformation> userLicenseData = new List<ChartResponseInformation>()
             {
                 new ChartResponseInformation()
                 {
                     name = "Used",
-                    data = new[]
-                    {
-                        "30"
-                    }
+                    data = usedData.ToArray()
                 },
                 new ChartResponseInformation()
                 {
                     name = "Unused",
-                    data = new[]
-                    {
-                        "70"
-                    }
+                    data = unUsedData.ToArray()
                 }
             };
 
-         ChartOptionInformation userLicenseChartConfig = new ChartOptionInformation()
+            ChartOptionInformation userLicenseChartConfig = new ChartOptionInformation()
             {
                 X_axisCategoryType = "category",
-                X_axisCategories = new[]
-                {
-                    "2020"
-                }
+                X_axisCategories = reqObj.RequestType == DataTypeEnum.yearly.ToString() ? years.ToArray()
+                    : reqObj.RequestType == DataTypeEnum.monthly.ToString() ? months.ToArray() :
+                    reqObj.RequestType == DataTypeEnum.weekly.ToString() ? weeks.ToArray() :
+                    reqObj.RequestType == DataTypeEnum.daily.ToString() ? days.ToArray() : years.ToArray()
             };
 
-            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
-            {
-                chartInfo = userLicenseData;
-                opt = userLicenseChartConfig;
-            }
-            else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
-            {
-                chartInfo = userLicenseData;
-                opt = userLicenseChartConfig;
-            }
-            else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
-            {
-                chartInfo = userLicenseData;
-                opt = userLicenseChartConfig;
-            }
-            else
-            {
-                chartInfo = userLicenseData;
-                opt = userLicenseChartConfig;
-            }
-
+            var chartInfo = userLicenseData;
+            var opt = userLicenseChartConfig;
 
             var result = new ChartResultResponse()
             {
                 LicenseInfo = licenseInfo,
                 ChartInfo = chartInfo,
-                ChartOptions = opt
+                ChartOptions = opt,
+                UsersLicenseInformationTableData = usage
             };
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -111,152 +238,113 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult UserOverTimeChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserCount> users = dBEngine.GetActiveUsers(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            List<UserCount> usersActivity =
+                dBEngine.GetActiveUsersActivity(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+
+            var filteredUserCount = new List<UserCount>();
+
+            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            {
+                filteredUserCount = users.GroupBy(x => new { x.DistinctYear })
+                    .Select(y => new UserCount
+                    {
+                        DistinctYear = y.Key.DistinctYear,
+                        ActivityCount = y.GroupBy(z => z.UserName).Count(),
+                        //UserName = y.Key.UserName
+                    }).ToList();
+            }
+            else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            {
+                filteredUserCount = users.GroupBy(x => new { x.Month })
+                    .Select(y => new UserCount
+                    {
+                        Month = y.Key.Month,
+                        ActivityCount = y.GroupBy(z => z.UserName).Count(),
+                        //UserName = y.Key.UserName
+                    }).ToList();
+            }
+            else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            {
+                filteredUserCount = users.GroupBy(x => new { x.Week })
+                    .Select(y => new UserCount
+                    {
+                        Week = y.Key.Week,
+                        ActivityCount = y.GroupBy(z => z.UserName).Count(),
+                        //UserName = y.Key.UserName
+                    }).ToList();
+            }
+            else if (reqObj.RequestType == DataTypeEnum.daily.ToString())
+            {
+                filteredUserCount = users.GroupBy(x => new { x.Day })
+                    .Select(y => new UserCount
+                    {
+                        Day = y.Key.Day,
+                        ActivityCount = y.GroupBy(z => z.UserName).Count(),
+                        //UserName = y.Key.UserName
+                    }).ToList();
+            }
+            else
+            {
+                filteredUserCount = users;
+            }
+
+            var userCounter = new List<string>();
             var chartInfo = new List<ChartResponseInformation>();
 
             var chartOptions = new ChartOptionInformation();
 
+            var years = new List<string>();
+            var months = new List<string>();
+            var weeks = new List<string>();
+            var days = new List<string>();
+
+            foreach (var row in filteredUserCount)
+            {
+                userCounter.Add(row.ActivityCount.ToString());
+                if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+                {
+                    years.Add(row.DistinctYear);
+                }
+                if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+                {
+                    months.Add(row.Month);
+                }
+                if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+                {
+                    weeks.Add(row.Week);
+                }
+                if (reqObj.RequestType == DataTypeEnum.daily.ToString())
+                {
+                    days.Add(row.Day);
+                }
+            }
+
+
+
             #region Static Data area
 
-            //if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Used License",
-            //            data = new[]
-            //            {
-            //                "34","45","30"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Unused License",
-            //            data = new[]
-            //            {
-            //                "74", "65", "70"
-            //            }
-            //        },
-            //    }; ;
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "2018",
-            //            "2019",
-            //            "2020"
+            chartInfo = new List<ChartResponseInformation>{
+                    new ChartResponseInformation()
+                    {
+                        name = "Active Users",
+                        data = userCounter.ToArray()
+                    }
+                };
+            chartOptions = new ChartOptionInformation()
+            {
+                X_axisCategoryType = "category",
+                X_axisCategories = reqObj.RequestType == DataTypeEnum.yearly.ToString() ? years.ToArray()
+                : reqObj.RequestType == DataTypeEnum.monthly.ToString() ? months.ToArray() :
+                reqObj.RequestType == DataTypeEnum.weekly.ToString() ? weeks.ToArray() :
+                reqObj.RequestType == DataTypeEnum.daily.ToString() ? days.ToArray() : years.ToArray()
+            };
 
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Used License",
-            //            data = new[]
-            //            {
-            //                "34","45","30","23","54"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Unused License",
-            //            data = new[]
-            //            {
-            //                "74", "65", "70","55","45"
-            //            }
-            //        },
-            //    }; ;
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "Jan",
-            //            "Feb",
-            //            "Mar",
-            //            "Apr",
-            //            "May"
-
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Used License",
-            //            data = new[]
-            //            {
-            //                "34","45","30","34","22","33","88","23"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Unused License",
-            //            data = new[]
-            //            {
-            //                "74", "65", "70","22","44","23","11","33"
-            //            }
-            //        },
-            //    }; ;
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "W1",
-            //            "W2",
-            //            "W3",
-            //            "W4",
-            //            "W5",
-            //            "W6",
-            //            "W7",
-            //            "W8",
-
-            //        }
-            //    };
-            //}
-            //else
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Used License",
-            //            data = new[]
-            //            {
-            //                "34","22","18","45","30","33","88","23"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Unused License",
-            //            data = new[]
-            //            {
-            //                "22","44","23","74", "65", "70","11","33"
-            //            }
-            //        },
-            //    }; ;
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "1",
-            //            "2",
-            //            "3",
-            //            "4",
-            //            "5",
-            //            "6",
-            //            "7",
-            //            "8",
-
-            //        }
-            //    };
-            //}
 
 
             #endregion
@@ -264,7 +352,8 @@ namespace DashbordApplication.Controllers
             var result = new ChartResultResponse()
             {
                 ChartInfo = chartInfo,
-                ChartOptions = chartOptions
+                ChartOptions = chartOptions,
+                UsersCountInformation = usersActivity
             };
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -273,24 +362,40 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult AvgTimeModuleChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            List<UserModuleDetails> userModuleTimeSpan = dBEngine.GetUserModuleTimeSpan(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]), true);
+
+
+            var filteredResult = userModuleDetails.GroupBy(x => x.ModuleName).Select(y => new UserModuleDetails
+            {
+                ModuleName = y.Key,
+                TimeSpan = Convert.ToInt32(y.Average(z => z.TimeSpan))
+            }).ToList();
+
             var chartInfo = new List<ChartResponseInformation>();
 
             var chartOptions = new ChartOptionInformation();
+
+            var modules = new List<string>();
+            var times = new List<string>();
+            var moduleInfoDic = new Dictionary<string, string>();
+
+            foreach (var data in filteredResult)
+            {
+                modules.Add(data.ModuleName);
+                times.Add(data.TimeSpan.ToString());
+                moduleInfoDic.Add(data.ModuleName, data.TimeSpan.ToString());
+            }
 
             chartInfo = new List<ChartResponseInformation>{
                 new ChartResponseInformation()
                 {
                     name = "AVG Time",
-                    data = new[]
-                    {
-                        $"{MinuteToDecimal(10, 0):##.##}",
-                        $"{MinuteToDecimal(8, 0):##.##}",
-                        $"{MinuteToDecimal(11, 25):##.##}",
-                        $"{MinuteToDecimal(3, 15):##.##}",
-                        $"{MinuteToDecimal(12, 00):##.##}",
-                        $"{MinuteToDecimal(18, 24):##.##}",
-                        $"{MinuteToDecimal(9, 12):##.##}",
-                    }
+                    data = times.ToArray()
                 },
 
             };
@@ -298,10 +403,7 @@ namespace DashbordApplication.Controllers
             chartOptions = new ChartOptionInformation()
             {
                 X_axisCategoryType = "category",
-                X_axisCategories = new[]
-                {
-                    "ME", "QAP", "MEO", "SJR1", "SJR Outcome", "SJR2", "Coding Review"
-                }
+                X_axisCategories = modules.ToArray()
             };
 
             var result = new ChartResultResponse();
@@ -313,10 +415,8 @@ namespace DashbordApplication.Controllers
 
                 foreach (var project in reqObj.FilterByProjectId)
                 {
-                    var projectIndex = Array.IndexOf(chartOptions.X_axisCategories, project);
-
-                    seriesData.Add(chartInfo.FirstOrDefault()?.data[projectIndex]);
-                    seriesCategoryData.Add(project);
+                    seriesData.Add(moduleInfoDic.FirstOrDefault(x => x.Key == project).Value);
+                    seriesCategoryData.Add(moduleInfoDic.FirstOrDefault(x => x.Key == project).Key);
                 }
 
                 result = new ChartResultResponse()
@@ -340,301 +440,153 @@ namespace DashbordApplication.Controllers
                 result = new ChartResultResponse()
                 {
                     ChartInfo = chartInfo,
-                    ChartOptions = chartOptions
+                    ChartOptions = chartOptions,
+                    UserModuleTimeSpanInformation = userModuleTimeSpan
                 };
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult AvgSpentTimeByModuleChartResult(ChartLoadRequestObject reqObj)
+        public JsonResult TotalTimeSpentByModuleChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+            List<UserModuleDetails> userModuleTimeSpan = dBEngine.GetUserModuleTimeSpan(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]), false);
+
+
+            //var filteredResult = userModuleDetails.GroupBy(x => x.UserName).Select(y => new UserModuleDetails
+            //{
+            //    ModuleName = y.Key,
+            //    ActivityCount = Convert.ToInt32(y.Average(z => z.TimeSpan))
+            //}).ToList();
             var chartInfo = new List<ChartResponseInformation>();
 
             var chartOptions = new ChartOptionInformation();
 
-            #region Static Data Area
+            var filteredUserModuleDetails = new List<UserModuleDetails>();
 
-            //if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "ME",
-            //            data = new[]
-            //            {
-            //                "31", "40", "28", "51"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "QAP",
-            //            data = new[]
-            //            {
-            //                "11", "32", "45", "32"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "MEO",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28"
-            //            }
-            //        }
-            //        ,
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR1",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR Outcome",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR2",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Coding Review",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "2017", "2018", "1019", "2020"
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "ME",
-            //            data = new[]
-            //            {
-            //                "40", "28", "31", "51"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "QAP",
-            //            data = new[]
-            //            {
-            //                "32", "45", "11", "32"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "MEO",
-            //            data = new[]
-            //            {
-            //                "45", "30", "15","28"
-            //            }
-            //        }
-            //        ,
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR1",
-            //            data = new[]
-            //            {
-            //                "30", "28", "15", "45"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR Outcome",
-            //            data = new[]
-            //            {
-            //                "15",  "28","45", "30",
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR2",
-            //            data = new[]
-            //            {
-            //                "28","15", "23", "45"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Coding Review",
-            //            data = new[]
-            //            {
-            //                "15", "45","28", "30"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "Jan", "Feb", "Mar", "Apr"
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "ME",
-            //            data = new[]
-            //            {
-            //                "31", "40", "28", "51","22","17"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "QAP",
-            //            data = new[]
-            //            {
-            //                "11","22","17", "32", "45", "32"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "MEO",
-            //            data = new[]
-            //            {
-            //                "15", "45","22","17","30", "28"
-            //            }
-            //        }
-            //        ,
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR1",
-            //            data = new[]
-            //            {
-            //                "22","17" ,"15", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR Outcome",
-            //            data = new[]
-            //            {
-            //                "15",  "28","22","17","45", "30"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR2",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28","28","22"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Coding Review",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28","45", "30"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "w1", "w2", "w3", "w4","w5","w6"
-            //        }
-            //    };
-            //}
-            //else
-            //{
-            //    chartInfo = new List<ChartResponseInformation>{
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "ME",
-            //            data = new[]
-            //            {
-            //                "31", "40", "28", "51","32", "45", "32","56"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "QAP",
-            //            data = new[]
-            //            {
-            //                "11", "32", "45", "32","34","23","23","91"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "MEO",
-            //            data = new[]
-            //            {
-            //                "15", "45","34","23", "30", "28","58","43"
-            //            }
-            //        }
-            //        ,
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR1",
-            //            data = new[]
-            //            {
-            //                "15","34","23","58","43", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR Outcome",
-            //            data = new[]
-            //            {
-            //                "34","23","58","43","15", "45", "30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "SJR2",
-            //            data = new[]
-            //            {
-            //                "15", "45","34","23","58","43","30", "28"
-            //            }
-            //        },
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Coding Review",
-            //            data = new[]
-            //            {
-            //                "15", "45", "30", "28","34","23","58","43"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "1", "2", "3", "4","5","6","7","8"
-            //        }
-            //    };
-            //}
+            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            {
+                filteredUserModuleDetails = userModuleDetails.GroupBy(x => new { x.Year, x.ModuleName })
+                    .Select(x => new UserModuleDetails
+                    {
+                        ModuleName = x.Key.ModuleName,
+                        Year = x.Key.Year,
+                        TimeSpan = x.Sum(y => y.TimeSpan)
+                    }).ToList();
+            }
+
+            if (reqObj.RequestType == DataTypeEnum.quarter.ToString())
+            {
+                filteredUserModuleDetails = userModuleDetails.GroupBy(x => new { x.Quarter, x.ModuleName })
+                    .Select(x => new UserModuleDetails
+                    {
+                        ModuleName = x.Key.ModuleName,
+                        Quarter = x.Key.Quarter,
+                        TimeSpan = x.Sum(y => y.TimeSpan)
+                    }).ToList();
+            }
+
+            if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            {
+                filteredUserModuleDetails = userModuleDetails.GroupBy(x => new { x.Month, x.ModuleName })
+                    .Select(x => new UserModuleDetails
+                    {
+                        ModuleName = x.Key.ModuleName,
+                        Month = x.Key.Month,
+                        TimeSpan = x.Sum(y => y.TimeSpan)
+                    }).ToList();
+            }
+
+            if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            {
+                filteredUserModuleDetails = userModuleDetails.GroupBy(x => new { x.Week, x.ModuleName })
+                    .Select(x => new UserModuleDetails
+                    {
+                        ModuleName = x.Key.ModuleName,
+                        Week = x.Key.Week,
+                        TimeSpan = x.Sum(y => y.TimeSpan)
+                    }).ToList();
+            }
+
+            #region Static Data Area
+            var xAxisCategories = new List<string>();
+            var chartResponse = new List<ChartResponseInformation>();
+
+            var serisData = new List<string>();
+
+            var dResult = filteredUserModuleDetails.GroupBy(x => x.ModuleName).ToList();
+            foreach (var row in dResult)
+            {
+                chartResponse.Add(new ChartResponseInformation
+                {
+                    name = row.Key,
+                    data = filteredUserModuleDetails.Where(x => x.ModuleName == row.Key).Select(x => x.TimeSpan.ToString()).ToArray()
+                });
+            }
+            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            {
+                var yearData = filteredUserModuleDetails.GroupBy(x => x.Year).ToList();
+                foreach (var year in yearData)
+                {
+                    if (!xAxisCategories.Any(x => x == year.Key.ToString()))
+                    {
+                        xAxisCategories.Add((year.Key.ToString()));
+                    }
+                }
+            }
+            if (reqObj.RequestType == DataTypeEnum.quarter.ToString())
+            {
+
+                var quarterData = filteredUserModuleDetails.GroupBy(x => x.Quarter).ToList();
+                foreach (var quarter in quarterData)
+                {
+                    if (!xAxisCategories.Any(x => x == quarter.Key.ToString()))
+                    {
+                        xAxisCategories.Add((quarter.Key.ToString()));
+                    }
+                }
+            }
+
+            if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            {
+
+                var monthData = filteredUserModuleDetails.GroupBy(x => x.Month).ToList();
+                foreach (var month in monthData)
+                {
+                    if (!xAxisCategories.Any(x => x == month.Key.ToString()))
+                    {
+                        xAxisCategories.Add((month.Key.ToString()));
+                    }
+                }
+            }
+
+            if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            {
+
+                var weekData = filteredUserModuleDetails.GroupBy(x => x.Week).ToList();
+                foreach (var week in weekData)
+                {
+                    if (!xAxisCategories.Any(x => x == week.Key.ToString()))
+                    {
+                        xAxisCategories.Add((week.Key.ToString()));
+                    }
+                }
+            }
+
+
+            chartInfo = chartResponse;
+            chartOptions = new ChartOptionInformation
+            {
+                X_axisCategoryType = "category",
+                X_axisCategories = xAxisCategories.ToArray()
+            };
+
 
             #endregion
 
@@ -642,7 +594,8 @@ namespace DashbordApplication.Controllers
             var result = new ChartResultResponse()
             {
                 ChartInfo = chartInfo,
-                ChartOptions = chartOptions
+                ChartOptions = chartOptions,
+                UserModuleTimeSpanInformation = userModuleTimeSpan
             };
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -651,92 +604,67 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult SessionAvgTimeByUserByModuleChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            List<UserModuleInfo> userModuleInfo = dBEngine.GetUserModuleInfo(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
             var chartInfo = new List<ChartResponseInformation>();
 
+            var filteredResult = userModuleDetails.GroupBy(x => new { x.UserName, x.ModuleName }).Select(
+                y => new UserModuleDetails
+                {
+                    UserName = y.Key.UserName,
+                    ModuleName = y.Key.ModuleName,
+                    ActivityCount = y.Count()
+                }).ToList();
 
             var chartOptions = new ChartOptionInformation();
+            var xAxisData = new List<string>();
+            var chartData = new List<ChartResponseInformation>();
+            var chartInfoData = new List<string>();
 
-            chartInfo = new List<ChartResponseInformation>
+            var dResult = filteredResult.GroupBy(x => x.ModuleName).ToList();
+
+            foreach (var moduleInfo in dResult)
+            {
+                chartData.Add(new ChartResponseInformation
                 {
-                    new ChartResponseInformation()
-                    {
-                        name = "ME",
-                        data = new[]
-                        {
-                            "20", "50", "13", "18","12"
-                        }
-                    },
-                    new ChartResponseInformation()
-                    {
-                        name = "QAP",
-                        data = new[]
-                        {
-                            "46","12", "0", "28", "32"
-                        }
-                    },
-                    new ChartResponseInformation()
-                    {
-                        name = "MEO",
-                        data = new[]
-                        {
-                            "30", "30","12", "25", "15"
-                        }
-                    },
-                    new ChartResponseInformation()
-                    {
-                        name = "SJR1",
-                        data = new[]
-                        {
-                            "12", "18", "45", "36", "21"
-                        }
-                    }
-                    ,
-                    new ChartResponseInformation()
-                    {
-                        name = "SJR Outcome",
-                        data = new[]
-                        {
-                            "24", "14", "56", "44","23"
-                        }
-                    }
-                    ,
-                    new ChartResponseInformation()
-                    {
-                        name = "SJR2",
-                        data = new[]
-                        {
-                            "22", "11", "33", "44","55"
-                        }
-                    },
-                    new ChartResponseInformation()
-                    {
-                        name = "Coding Review",
-                        data = new[]
-                        {
-                            "23", "12", "34", "54","22"
-                        }
-                    }
-                };
+                    name = moduleInfo.Key,
+                    data = filteredResult.Where(x => x.ModuleName == moduleInfo.Key).Select(x => x.ActivityCount.ToString()).ToArray()
+                });
+
+            }
+
+            foreach (var userData in filteredResult.GroupBy(x => x.UserName).ToList())
+            {
+                if (!xAxisData.Any(x => x == userData.Key))
+                {
+                    xAxisData.Add(userData.Key);
+                }
+            }
+
+            chartInfo = chartData;
             chartOptions = new ChartOptionInformation
             {
                 X_axisCategoryType = "category",
-                X_axisCategories = new[]
-                {
-                            "U1", "U2", "U3", "U4","U5"
-                        }
+                X_axisCategories = xAxisData.ToArray()
             };
 
 
             var result = new ChartResultResponse();
 
-            if (reqObj.FilterByProjectId != null && reqObj.FilterByProjectId.Length > 0)
+            if (reqObj.FilterByUserId != null && reqObj.FilterByUserId.Length > 0)
             {
                 var seriesData = new List<ChartResponseInformation>();
-                //var seriesCategoriesData = new List<string>();
-                foreach (var projectId in reqObj.FilterByProjectId)
+                var seriesCategoriesData = new List<string>();
+                foreach (var userId in reqObj.FilterByUserId)
                 {
-                    seriesData.Add(chartInfo.FirstOrDefault(x => x.name == projectId));
-                    //seriesCategoriesData.Add(projectId);
+                    var seriesDataIndex = Array.IndexOf(chartOptions.X_axisCategories, userId);
+
+                    seriesData.Add(chartInfo[seriesDataIndex]);
+                    seriesCategoriesData.Add(userId);
                 }
 
                 result = new ChartResultResponse()
@@ -745,10 +673,7 @@ namespace DashbordApplication.Controllers
                     ChartOptions = new ChartOptionInformation
                     {
                         X_axisCategoryType = "category",
-                        X_axisCategories = new[]
-                        {
-                            "U1", "U2", "U3", "U4","U5"
-                        }
+                        X_axisCategories = seriesCategoriesData.ToArray()
                     }
                 };
             }
@@ -757,7 +682,8 @@ namespace DashbordApplication.Controllers
                 result = new ChartResultResponse()
                 {
                     ChartInfo = chartInfo,
-                    ChartOptions = chartOptions
+                    ChartOptions = chartOptions,
+                    UserModuleInformation = userModuleInfo
                 };
 
             }
@@ -768,6 +694,31 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult SessionChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserCount> users = dBEngine.GetActiveUsers(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            List<UserSessionCount> userSessionCount = dBEngine.GetUsersSessionCount(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+            var filteredUserCount = users.GroupBy(x => x.UserName)
+                .Select(x => new UserCount
+                {
+                    UserName = x.Key,
+                    ActivityCount = x.Sum(y => y.ActivityCount)
+                }).ToList();
+
+            var stringUserActivityCounter = new List<string>();
+            var stringUsers = new List<string>();
+            var userActivityInfo = new Dictionary<string, string>();
+
+            foreach (var user in filteredUserCount)
+            {
+                stringUsers.Add(user.UserName);
+                stringUserActivityCounter.Add(user.ActivityCount.ToString());
+                userActivityInfo.Add(user.UserName, user.ActivityCount.ToString());
+            }
+
             var chartInfo = new List<ChartResponseInformation>();
 
             var chartOptions = new ChartOptionInformation();
@@ -776,19 +727,13 @@ namespace DashbordApplication.Controllers
                 new ChartResponseInformation
                 {
                     name = "",
-                    data = new[]
-                    {
-                        "30", "46", "25", "50", "38"
-                    }
+                    data = stringUserActivityCounter.ToArray()
                 }
             };
             chartOptions = new ChartOptionInformation
             {
                 X_axisCategoryType = "category",
-                X_axisCategories = new[]
-                {
-                    "U1", "U2", "U3", "U4", "U5"
-                }
+                X_axisCategories = stringUsers.ToArray()
             };
 
             var result = new ChartResultResponse();
@@ -802,9 +747,7 @@ namespace DashbordApplication.Controllers
                 {
                     if (!string.IsNullOrEmpty(userId))
                     {
-                        var userNameIndex = Array.IndexOf(chartOptions.X_axisCategories, userId.ToUpper().Trim());
-
-                        seriesDataArray.Add(chartInfo.FirstOrDefault()?.data[userNameIndex]);
+                        seriesDataArray.Add(userActivityInfo.FirstOrDefault(x => x.Key == userId).Value);
                         categoriesDataArray.Add(userId);
 
                     }
@@ -830,7 +773,8 @@ namespace DashbordApplication.Controllers
                 result = new ChartResultResponse()
                 {
                     ChartInfo = chartInfo,
-                    ChartOptions = chartOptions
+                    ChartOptions = chartOptions,
+                    UserSessionCountInformation = userSessionCount
                 };
             }
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -839,168 +783,146 @@ namespace DashbordApplication.Controllers
         [HttpPost]
         public JsonResult SessionTimeChartResult(ChartLoadRequestObject reqObj)
         {
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserCount> users = dBEngine.GetActiveUsers(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
             var chartInfo = new List<ChartResponseInformation>();
 
+            var filteredResult = new List<UserCount>();
 
             var chartOptions = new ChartOptionInformation();
 
+            if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
+            {
+                filteredResult = users.GroupBy(x => x.DistinctYear).Select(y => new UserCount
+                {
+                    DistinctYear = y.Key,
+                    ActivityCount = y.Sum(z => z.ActivityCount)
+                }).ToList();
+            }
+            if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
+            {
+                filteredResult = users.GroupBy(x => x.Month).Select(y => new UserCount
+                {
+                    Month = y.Key,
+                    ActivityCount = y.Sum(z => z.ActivityCount)
+                }).ToList();
+            }
+            if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
+            {
+                filteredResult = users.GroupBy(x => x.Week).Select(y => new UserCount
+                {
+                    Week = y.Key,
+                    ActivityCount = y.Sum(z => z.ActivityCount)
+                }).ToList();
+            }
+            if (reqObj.RequestType == DataTypeEnum.daily.ToString())
+            {
+                filteredResult = users.GroupBy(x => x.Day).Select(y => new UserCount
+                {
+                    Day = y.Key,
+                    ActivityCount = y.Sum(z => z.ActivityCount)
+                }).ToList();
+            }
+
+            var seriesData = new List<string>();
+            var xAxisData = new List<string>();
+
+            foreach (var userCountInfo in filteredResult)
+            {
+                seriesData.Add(userCountInfo.ActivityCount.ToString());
+                xAxisData.Add(reqObj.RequestType == DataTypeEnum.yearly.ToString() ? userCountInfo.DistinctYear :
+                    reqObj.RequestType == DataTypeEnum.monthly.ToString() ? userCountInfo.Month :
+                    reqObj.RequestType == DataTypeEnum.weekly.ToString() ? userCountInfo.Week :
+                    userCountInfo.Day);
+            }
+
             #region Static Data Area
 
-            //if (reqObj.RequestType == DataTypeEnum.yearly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>
-            //    {
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Session",
-            //            data = new[]
-            //            {
-            //                "10", "41", "35", "51"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "2017", "2018", "2019", "2020"
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.monthly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>
-            //    {
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Session",
-            //            data = new[]
-            //            {
-            //                "17", "14", "53", "26"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "Jan", "Feb", "Mar", "Apr", "May","Jun"
-            //        }
-            //    };
-            //}
-            //else if (reqObj.RequestType == DataTypeEnum.weekly.ToString())
-            //{
-            //    chartInfo = new List<ChartResponseInformation>
-            //    {
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Session",
-            //            data = new[]
-            //            {
-            //                "17", "26","23","45","14", "53","43","12"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "W1", "W2", "W3", "W4", "W5","W6","W7"
-            //        }
-            //    };
-            //}
-            //else
-            //{
-            //    chartInfo = new List<ChartResponseInformation>
-            //    {
-            //        new ChartResponseInformation()
-            //        {
-            //            name = "Session",
-            //            data = new[]
-            //            {
-            //                "45","14", "53", "17", "26","23","43","12","24"
-            //            }
-            //        }
-            //    };
-            //    chartOptions = new ChartOptionInformation()
-            //    {
-            //        X_axisCategoryType = "category",
-            //        X_axisCategories = new[]
-            //        {
-            //            "1", "2", "3", "4", "5","6","7","8","9"
-            //        }
-            //    };
-            //}
+
+            chartInfo = new List<ChartResponseInformation>
+                {
+                    new ChartResponseInformation()
+                    {
+                        name = "Session",
+                        data = seriesData.ToArray()
+                    }
+                };
+            chartOptions = new ChartOptionInformation()
+            {
+                X_axisCategoryType = "category",
+                X_axisCategories = xAxisData.ToArray()
+            };
+
 
             #endregion
 
             var result = new ChartResultResponse()
             {
                 ChartInfo = chartInfo,
-                ChartOptions = chartOptions
+                ChartOptions = chartOptions,
+                UserModuleTimeSpanInformation = userModuleDetails
             };
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult GetUsers()
+        [HttpPost]
+        public JsonResult GetUsers(ChartLoadRequestObject reqObj)
         {
-            var userList = GetUserList();
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+            var userList = userModuleDetails.GroupBy(x => x.UserName)
+                .Select(y => new UserInformation
+                {
+                    Id = y.Key,
+                    UserName = y.Key
+                }).ToList();
             return Json(userList, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult GetModules()
+        [HttpPost]
+        public JsonResult GetSessionChartUsers(ChartLoadRequestObject reqObj)
         {
-            var projectList = GetProjectList();
-            return Json(projectList, JsonRequestBehavior.AllowGet);
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserCount> users = dBEngine.GetActiveUsers(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+            var userList = users.GroupBy(x => x.UserName)
+                .Select(x => new UserInformation
+                {
+                    Id = x.Key,
+                    UserName = x.Key
+                }).ToList();
+            return Json(userList, JsonRequestBehavior.AllowGet);
         }
 
-        private static List<ModuleInformation> GetProjectList()
+        [HttpPost]
+        public JsonResult GetModules(ChartLoadRequestObject reqObj)
         {
-            return new List<ModuleInformation>()
+            DateTime startDate = string.IsNullOrEmpty(reqObj.StartDate) ? System.DateTime.Now.AddDays(-365) : DateTime.ParseExact(reqObj.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = string.IsNullOrEmpty(reqObj.EndDate) ? System.DateTime.Now : DateTime.ParseExact(reqObj.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            string connectionString = ConfigurationManager.ConnectionStrings["NHSConStr"].ConnectionString;
+            DBEngine dBEngine = new DBEngine(connectionString);
+            List<UserModuleDetails> userModuleDetails = dBEngine.GetUserModuleDetails(startDate, endDate, Convert.ToInt32(Session["LoginUserID"]));
+
+            var moduleList = userModuleDetails.GroupBy(x => x.ModuleName).Select(x => new ModuleInformation()
             {
-                new ModuleInformation()
-                {
-                    ModuleId = "ME",
-                    ModuleName = "ME"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "QAP",
-                    ModuleName = "QAP"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "MEO",
-                    ModuleName = "MEO"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "SJR1",
-                    ModuleName = "SJR1"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "SJR Outcome",
-                    ModuleName = "SJR Outcome"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "SJR2",
-                    ModuleName = "SJR2"
-                },
-                new ModuleInformation()
-                {
-                    ModuleId = "Coding Review",
-                    ModuleName = "Coding Review"
-                }
-            };
+                ModuleId = x.Key,
+                ModuleName = x.Key
+            }).ToList();
+            return Json(moduleList, JsonRequestBehavior.AllowGet);
         }
+
 
         private static List<UserInformation> GetUserList()
         {
@@ -1043,6 +965,10 @@ namespace DashbordApplication.Controllers
         {
             return Convert.ToDecimal(min + sec * 0.0168);
         }
+
+
+        #endregion
+
 
         public ActionResult About()
         {

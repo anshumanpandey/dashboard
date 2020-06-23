@@ -10,9 +10,10 @@
     @*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />*@
 
     <style>
-        .apexcharts-toolbar {
-            right: 20px !important;
-        }
+        /*.apexcharts-toolbar {
+            top: -70px !important;
+            right: -35px !important;
+        }*/
 
         .userChartDetails {
             font-size: 20px !important;
@@ -27,41 +28,41 @@
 }
 
 <div class="row">
-<div class="col-md-12 pt-5">
-    <div class="kt-portlet">
-        <!--begin::Form-->
-        <form class="kt-form kt-form--label-right">
-            <div class="kt-portlet__body" style="padding-bottom: 0px !important">
+    <div class="col-md-12 pt-5">
+        <div class="kt-portlet">
+            <!--begin::Form-->
+            <form class="kt-form kt-form--label-right">
+                <div class="kt-portlet__body" style="padding-bottom: 0px !important">
 
-                <div class="form-group row">
-                    <label for="startDate" class="col-1 col-form-label">Start Date</label>
-                    <div class="col-4">
+                    <div class="form-group row">
+                        <label for="startDate" class="col-1 col-form-label">Start Date</label>
+                        <div class="col-4">
 
-                        <div class="input-group">
-                            <input class="form-control" type="text" id="startDate" placeholder="dd/mm/yyyy">
-                            <div class="input-group-append"><span class="input-group-text"><i class="flaticon2-calendar-9" style="font-size: 19px !important"></i></span></div>
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="startDate" placeholder="dd/mm/yyyy">
+                                <div class="input-group-append"><span class="input-group-text"><i class="flaticon2-calendar-9" style="font-size: 19px !important"></i></span></div>
+                            </div>
+                        </div>
+                        <label for="endDate" class="col-1 col-form-label">End Date</label>
+                        <div class="col-4">
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="endDate" placeholder="dd/mm/yyyy" aria-describedby="basic-addon2">
+                                <div class="input-group-append"><span class="input-group-text" id="basic-addon2"><i class="flaticon2-calendar-9" style="font-size: 19px !important"></i></span></div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-2">
+
+                            <button type="button" id="btnSearch" class="btn btn-light btn-elevate-hover btn-pill btn-sm">
+                                <i class="flaticon-search"></i> Search
+                            </button>
+
                         </div>
                     </div>
-                    <label for="endDate" class="col-1 col-form-label">End Date</label>
-                    <div class="col-4">
-                        <div class="input-group">
-                            <input class="form-control" type="text" id="endDate" placeholder="dd/mm/yyyy" aria-describedby="basic-addon2">
-                            <div class="input-group-append"><span class="input-group-text" id="basic-addon2"><i class="flaticon2-calendar-9" style="font-size: 19px !important"></i></span></div>
-                        </div>
 
-                    </div>
-
-                    <div class="col-2">
-
-                        <button type="button" id="btnSearch" class="btn btn-light btn-elevate-hover btn-pill btn-sm">
-                            <i class="flaticon-search"></i> Search
-                        </button>
-
-                    </div>
                 </div>
-
-            </div>
-            @*<div class="kt-portlet__foot">
+                @*<div class="kt-portlet__foot">
                         <div class="kt-form__actions">
                             <div class="row">
                                 <div class="col-2">
@@ -73,44 +74,44 @@
                             </div>
                         </div>
                     </div>*@
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-<div class="col-md-6 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;"></h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+    <div class="col-md-6 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;"></h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="License Information">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link licenseInformationModalPopUp" data-title="License Information">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @*<div class="kt-widget21">
+            @*<div class="kt-widget21">
                     <div class="kt-widget21__content kt-portlet__space-x">
 
                         <div class="kt-widget21__item">
@@ -129,101 +130,101 @@
                         <div id="assignedBarChart"></div>
                     </div>
                 </div>*@
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div class="kt-widget21__item">
-                <div class="kt-widget21__info">
-                    <span class="kt-widget21__title userChartCtegoryDetails pull-right pr-5">
-                        <label id="lblNofUsedLicense"></label> - Used
-                        <br />
-                        <label id="lblNoOfUnusedLicense"></label> - Unused
-                    </span>
-
-                </div>
-
-            </div>
-            <div style="left: 20%;">
-                <div id="assignedBarChart"></div>
-            </div>
-
-        </div>
-    </div>
-</div>
-<div class="col-md-6 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    Users
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="daily">
-                            Day
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="weekly">
-                            Week
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="monthly">
-                            Month
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="yearly">
-                            Year
-                        </a>
-                    </li>
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
-
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
-
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="Users">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
-
-
-                        </ul>
-
-                        <!--end::Nav-->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="kt-widget21">
-            <div class="kt-widget21__content kt-portlet__space-x">
-                <div class="kt-widget21__item" style="padding-left: 0 !important;">
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div class="kt-widget21__item">
                     <div class="kt-widget21__info">
-                        <span class="kt-widget21__title userChartDetails">
-                            <label id="lblNoOfLicenseAllocated"></label> License allocated
+                        <span class="kt-widget21__title userChartCtegoryDetails pull-right pr-5">
+                            <label id="lblNofUsedLicense"></label> - Used
+                            <br />
+                            <label id="lblNoOfUnusedLicense"></label> - Unused
                         </span>
 
                     </div>
+
+                </div>
+                <div style="left: 37%;">
+                    <div id="assignedBarChart"></div>
                 </div>
 
             </div>
-            <div class="kt-widget20__chart">
-                <div id="userChart"></div>
-            </div>
         </div>
-        @*<div class="kt-portlet__body kt-portlet__body--fit">
+    </div>
+    <div class="col-md-6 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Users
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="daily">
+                                Day
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="weekly">
+                                Week
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="monthly">
+                                Month
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active userLicenseChartButton" data-toggle="tab" role="tab" data-reqtype="yearly">
+                                Year
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
+
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link usersLicenseInfoModalPopUp" data-title="Users">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                            <!--end::Nav-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-widget21">
+                <div class="kt-widget21__content kt-portlet__space-x">
+                    <div class="kt-widget21__item" style="padding-left: 0 !important;">
+                        <div class="kt-widget21__info">
+                            <span class="kt-widget21__title userChartDetails">
+                                <label id="lblNoOfLicenseAllocated"></label> License allocated
+                            </span>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="kt-widget20__chart">
+                    <div id="userChart"></div>
+                </div>
+            </div>
+            @*<div class="kt-portlet__body kt-portlet__body--fit">
                     <div class="row">
                         <div class="col-md-12">
 
@@ -231,94 +232,94 @@
                     </div>
 
                 </div>*@
+        </div>
     </div>
-</div>
-<div class="col-md-12 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    Users Over Time
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="daily">
-                            Day
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="weekly">
-                            Week
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="monthly">
-                            Month
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="yearly">
-                            Year
-                        </a>
-                    </li>
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+    <div class="col-md-12 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Users Over Time
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="daily">
+                                Day
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="weekly">
+                                Week
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="monthly">
+                                Month
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active userOverTimeChartButton" data-toggle="tab" role="tab" data-reqtype="yearly">
+                                Year
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="Users Over Time">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link userOverTimeModalPopUp" data-title="Users Over Time">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="usersOverTime"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="usersOverTime"></div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-6 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    AVG Time - Module
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <select id="ddlProjectAvgTimeModule" multiple="multiple">
-                            @*<option value="ME">ME</option>
-                            <option value="QAP">QAP</option>
-                            <option value="MEO">MEO</option>
-                            <option value="SJR1">SJR1</option>
-                            <option value="SJR Outcome">SJR Outcome</option>
-                            <option value="SJR2">SJR2</option>
-                            <option value="Coding Review">Coding Review</option>*@
+    <div class="col-md-6 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        AVG Time - Module
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <select id="ddlProjectAvgTimeModule" multiple="multiple">
+                                @*<option value="ME">ME</option>
+                                    <option value="QAP">QAP</option>
+                                    <option value="MEO">MEO</option>
+                                    <option value="SJR1">SJR1</option>
+                                    <option value="SJR Outcome">SJR Outcome</option>
+                                    <option value="SJR2">SJR2</option>
+                                    <option value="Coding Review">Coding Review</option>*@
 
-                        </select>
-                    </li>
-                    @*<li class="nav-item">
+                            </select>
+                        </li>
+                        @*<li class="nav-item">
                                 <a class="nav-link avgTimeModuleButton" data-toggle="tab" role="tab" data-reqtype="daily">
                                     Day
                                 </a>
@@ -338,127 +339,119 @@
                                     Year
                                 </a>
                             </li>*@
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="AVG Time - Module">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link avgTimeModuleModalPopUp" data-title="AVG Time - Module">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="avgTimeChartByModule"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="avgTimeChartByModule"></div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-6 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    AVG Time Spent Module
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-
-                    <li class="nav-item">
-                        <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="daily">
-                            Day
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="weekly">
-                            Week
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="monthly">
-                            Month
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="yearly">
-                            Year
-                        </a>
-                    </li>
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
-
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
-
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="AVG Time Spent Module">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+    <div class="col-md-6 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Total Time Spent Module
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
 
 
-                        </ul>
+                        <li class="nav-item">
+                            <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="weekly">
+                                Week
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="monthly">
+                                Month
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="quarter">
+                                Quarter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active avgTimeSpentModuleButton" data-toggle="tab" role="tab" data-reqtype="yearly">
+                                Year
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--end::Nav-->
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
+
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link totalTimeSpentModuleModalPopup" data-title="AVG Time Spent Module">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="avgTimeSpentModule"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="avgTimeSpentModule"></div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-12 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    Sessions (AVG) by user & module
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <select id="ddlProjectSessionByUserByModule" multiple="multiple">
-                            @*<option value="ME">ME</option>
-                            <option value="QAP">QAP</option>
-                            <option value="MEO">MEO</option>
-                            <option value="SJR1">SJR1</option>
-                            <option value="SJR Outcome">SJR Outcome</option>
-                            <option value="SJR2">SJR2</option>
-                            <option value="Coding Review">Coding Review</option>*@
-
-                        </select>
-                    </li>
-                    @*<li class="nav-item">
+    <div class="col-md-12 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Sessions (AVG) by user & module
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <select id="ddlUserSessionByUserByModule" multiple="multiple"></select>
+                        </li>
+                        @*<li class="nav-item">
                                 <a class="nav-link sessionAvgTimeByUserByModuleButton" data-toggle="tab" role="tab" data-reqtype="daily">
                                     Day
                                 </a>
@@ -478,56 +471,54 @@
                                     Year
                                 </a>
                             </li>*@
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="Sessions (AVG) by user & module">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link sessionAvgByUserModuleModalPopUp" data-title="Sessions (AVG) by user & module">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="sessionSvgByUserByModule"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="sessionSvgByUserByModule"></div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-12 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    Sessions/Events
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <select id="ddlUserSessionChart" multiple="multiple">
-                           
-                        </select>
-                    </li>
-                    @*<li class="nav-item">
+    <div class="col-md-12 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Sessions/Events
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <select id="ddlUserSessionChart" multiple="multiple"></select>
+                        </li>
+                        @*<li class="nav-item">
                                 <a class="nav-link sessionChartButton" data-toggle="tab" role="tab" data-reqtype="daily">
                                     Day
                                 </a>
@@ -547,149 +538,333 @@
                                     Year
                                 </a>
                             </li>*@
-                </ul>
+                    </ul>
 
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="Sessions/Events">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link sessionChartModalPopUp" data-title="Sessions/Events">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="sessionChart"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="sessionChart"></div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-12 pt-2">
-    <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
-        <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
-                    Session Time
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="daily">
-                            Day
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="weekly">
-                            Week
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="monthly">
-                            Month
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="yearly">
-                            Year
-                        </a>
-                    </li>
-                </ul>
-                <div class="dropdown dropdown-inline">
-                    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="flaticon-more-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+    <div class="col-md-12 pt-2">
+        <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+            <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500; color: #48465b;">
+                        Session Time
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills nav-pills-sm nav-pills-label nav-pills-bold" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="daily">
+                                Day
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="weekly">
+                                Week
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="monthly">
+                                Month
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active sessionTimeChart" data-toggle="tab" role="tab" data-reqtype="yearly">
+                                Year
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown dropdown-inline">
+                        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flaticon-more-1"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
 
-                        <!--begin::Nav-->
-                        <ul class="kt-nav">
-                            <li class="kt-nav__head">
-                                Export Options
+                            <!--begin::Nav-->
+                            <ul class="kt-nav">
+                                <li class="kt-nav__head">
+                                    Export Options
 
-                            </li>
-                            <li class="kt-nav__separator"></li>
-                            <li class="kt-nav__item">
-                                <a class="kt-nav__link dataModalPopup" data-title="Session Time">
-                                    <i class="kt-nav__link-icon flaticon-diagram"></i>
-                                    <span class="kt-nav__link-text">Data</span>
-                                </a>
-                            </li>
+                                </li>
+                                <li class="kt-nav__separator"></li>
+                                <li class="kt-nav__item">
+                                    <a class="kt-nav__link sessionTimeChartModalPopUp" data-title="Session Time">
+                                        <i class="kt-nav__link-icon flaticon-diagram"></i>
+                                        <span class="kt-nav__link-text">Data</span>
+                                    </a>
+                                </li>
 
-                        </ul>
+                            </ul>
 
-                        <!--end::Nav-->
+                            <!--end::Nav-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="kt-portlet__body kt-portlet__body--fit">
-            <div id="sessionTimeChart"></div>
+            <div class="kt-portlet__body kt-portlet__body--fit">
+                <div id="sessionTimeChart"></div>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-<div class="modal" tabindex="-1" role="dialog" id="dataExportModal">
+<div class="modal" tabindex="-1" role="dialog" id="modalLicenseInformation">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"> &times; </span>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="tblLicenseInformation">
+                    <thead>
+                        <tr>
+                            <th>Total License</th>
+                            <th>Unused License</th>
+                            <th>Used License</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modalUsersLicenseInformation">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tbUserLicenseInformation">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Week</th>
+                            <th>Day</th>
+                            <th>Year</th>
+                            <th>Total License</th>
+                            <th>Unused License</th>
+                            <th>Used License</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalUserOverTime">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblUserOverTime">
+                    <thead>
+                        <tr>
+                            <th>UserName</th>
+                            <th>Activity Count</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalAvgTimeModule">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblAvgTimeModule">
+                    <thead>
+                    <tr></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalTotalTimeSpentModule">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblTotalTimeSpentModule">
+                    <thead>
+                    <tr></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalSessionAvgByUserModule">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblSessionAvgByUserModule">
                     <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>UserName</th>
+                        <th>QAP</th>
+                        <th>ME</th>
+                        <th>MEO</th>
+                        <th>SJR1</th>
+                        <th>SJROutcome</th>
+                        <th>SJR2</th>
+                        <th>CodingReview</th>
+                    </tr>
+                    
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalSessionChart">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 90% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblSessionChart">
+                    <thead>
+                    <tr></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalSessionTimeChart">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 90% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn btn-primary">
+                    Download CSV
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" id="tblSessionTimeChart">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>PatientID</th>
+                        <th>Module Name</th>
+                        <th>User Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Quarter</th>
+                        <th>Week</th>
+                        <th>TimeSpan</th>
+                        <th>Activity Count</th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
             <div class="modal-footer">

@@ -150,3 +150,7 @@ D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\obj\De
 D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\obj\Debug\DashbordApplication.csproj.CopyComplete
 D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\obj\Debug\DashbordApplication.dll
 D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\obj\Debug\DashbordApplication.pdb
+D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\bin\NHS.Common.dll
+D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\bin\NHS.Data.dll
+D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\bin\NHS.Common.pdb
+D:\Emrul\Upwork\Project\dashboard\DashbordApplication\DashbordApplication\bin\NHS.Data.pdb

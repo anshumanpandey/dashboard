@@ -10,6 +10,7 @@ namespace DashbordApplication.Models
         yearly = 1,
         monthly = 2,
         weekly = 3,
-        daily = 4
+        daily = 4,
+        quarter = 5
     }
 }

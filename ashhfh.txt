@@ -1,0 +1,11 @@
+year, month, quater, week
+
+Total Time Spent
+
+Add Export in PNG option in every bullerts
+
+AVG Time Module => Chart will be loaded on based of Group By Module, Sum of Time And then show the AVG my dividing Sum of time / No of Module
+
+Total Time Spent Module => Group by year, quater, month and week, show mudole and the total timspan of that grouped data
+
+Session (AVG) by user & module => User + Module combination count

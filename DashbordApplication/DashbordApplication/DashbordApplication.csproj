@@ -130,6 +130,7 @@
     <Compile Include="Models\ChartResultResponse.cs" />
     <Compile Include="Models\DataTypeEnum.cs" />
     <Compile Include="Models\LicenseInformation.cs" />
+    <Compile Include="Models\LicenseUsage.cs" />
     <Compile Include="Models\ModuleInformation.cs" />
     <Compile Include="Models\UserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2024,6 +2025,16 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\cors-rbh\nhs.common\NHS.Common.csproj">
+      <Project>{a44e2abe-d8c8-4a81-859d-5846b3565e2e}</Project>
+      <Name>NHS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cors-rbh\nhs.data\NHS.Data.csproj">
+      <Project>{c63c7f2d-4fb2-4d55-a56b-428c41098c08}</Project>
+      <Name>NHS.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
