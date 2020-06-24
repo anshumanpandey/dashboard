@@ -8,6 +8,8 @@
     <link href="~/assets/plugins/datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
     <link href="~/assets/plugins/multiselect/multiple-select.css" rel="stylesheet" />
     @*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />*@
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css" rel="stylesheet"/>
 
     <style>
         /*.apexcharts-toolbar {
@@ -641,9 +643,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalLicenseInformationExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblLicenseInformation">
@@ -671,9 +674,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalUsersLicenseInformationExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tbUserLicenseInformation">
@@ -704,9 +708,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalUserOverTimeExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblUserOverTime">
@@ -732,9 +737,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalAvgTimeModuleExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblAvgTimeModule">
@@ -757,9 +763,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalTotalTimeSpentModuleExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblTotalTimeSpentModule">
@@ -782,9 +789,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalSessionAvgByUserModuleExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblSessionAvgByUserModule">
@@ -817,9 +825,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalSessionChartExportButton"></div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblSessionChart">
@@ -842,9 +851,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                <button type="button" class="btn btn-primary">
+                <div id="modalSessionTimeChartExportButton">
+
+                </div>
+                @*<button type="button" class="btn btn-primary">
                     Download CSV
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" id="tblSessionTimeChart">
@@ -881,6 +893,11 @@
     <script src="~/assets/plugins/global/plugins.bundle.js" type="text/javascript"></script>
     <script src="~/assets/js/scripts.bundle.js" type="text/javascript"></script>
     <script src="~/assets/plugins/multiselect/multiple-select.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
     @*<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>*@
     <script src="~/Scripts/ChartLoader.js"></script>
 }

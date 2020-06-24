@@ -161,6 +161,7 @@
         });
 });
 
+var chartColors = ['#000000','#FF0000'];
 
 var assignedBarChartOptions = {
     series: [],
@@ -202,7 +203,7 @@ var assignedBarChartOptions = {
         }
     }],
     labels: [],
-    colors: ['#008000', '#D3D3D3']
+    colors: chartColors
 };
 
 
@@ -309,7 +310,8 @@ var userChartOptions = {
     },
     fill: {
         opacity: 1
-    }
+    },
+    colors: chartColors
 };
 
 // User chart Ends
@@ -414,7 +416,8 @@ var avgTimeByModuleChartOptions = {
         style: {
             color: '#444'
         }
-    }
+    },
+    colors: chartColors
 };
 
 // End AVG Time - Module
@@ -495,7 +498,8 @@ var sessionAvgTimeByUserByModuleOpt = {
     },
     fill: {
         opacity: 1
-    }
+    },
+    colors: chartColors
 };
 
 // End Session AVG Time By user By Module
@@ -560,7 +564,8 @@ var userOverTimeOpt = {
             show: true,
         }
     }
-
+    ,
+    colors: chartColors
 };
 
 
@@ -620,7 +625,8 @@ var avgTimeSpentModuleOpt = {
             show: true,
 
         },
-    }
+    },
+    colors: chartColors
 
 };
 
@@ -679,7 +685,8 @@ var sessionChartOpt = {
             show: true,
 
         },
-    }
+    },
+    colors: chartColors
 };
 
 // End of session chart
@@ -720,7 +727,8 @@ var sessionTimeChartOpt = {
     },
     xaxis: {
         categories: []
-    }
+    },
+    colors: chartColors
 };
 
 var userChart = '', userOverTimeChart = '', avgTimeChartByModule = '', avgTimeSpentModuleChart = ''
@@ -750,6 +758,19 @@ function LoadAllChart() {
             "<td>" + response.licenseInfo.NoOfUnusedLicense + "</td>" +
             "<td>" + response.licenseInfo.NoOfUsedLicense + "</td>" +
             "</tr>");
+
+        $('#modalLicenseInformationExportButton').empty();
+        var dataTable = $('#tblLicenseInformation').DataTable({
+            retrieve: true,
+            paging: true,
+            searching: false,
+            ordering: false
+        });
+        var buttons = new $.fn.dataTable.Buttons(dataTable, {
+            buttons: [
+                'csv'
+            ]
+        }).container().appendTo($('#modalLicenseInformationExportButton'));
     });
 
     userChart = new ApexCharts(document.querySelector("#userChart"), userChartOptions);
@@ -941,6 +962,20 @@ function UpdateUserLicenseChart(requestType = 'yearly') {
                         '</td>' +
                         '</tr>');
                 });
+
+
+            $('#modalUsersLicenseInformationExportButton').empty();
+            var dataTable = $('#tbUserLicenseInformation').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csvHtml5'
+                ]
+            }).container().appendTo($('#modalUsersLicenseInformationExportButton'));
         }
     });
 
@@ -976,10 +1011,27 @@ function UpdateUserOverTime(requestType = 'yearly') {
             $.each(response.UsersCountInformation,
                 function(i, data) {
                     usersOverTimeTable.append('<tr>' +
-                        '<td>'+data.UserName+'</td>' +
-                        '<td>'+data.ActivityCount+'</td>' +
-                        '</tr>')
+                        '<td>' +
+                        data.UserName +
+                        '</td>' +
+                        '<td>' +
+                        data.ActivityCount +
+                        '</td>' +
+                        '</tr>');
                 });
+
+            $('#modalUserOverTimeExportButton').empty();
+            var dataTable = $('#tblUserOverTime').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalUserOverTimeExportButton'));
         }
     });
 }
@@ -1025,11 +1077,28 @@ function UpdateAvgTimeChartByModule(requestType = 'yearly') {
 
             var tableBody = $('#tblAvgTimeModule tbody');
             tableBody.empty();
+            var tdData = '<tr>';
+
             $.each(response.UserModuleTimeSpanInformation,
                 function (i, data) {
                     tableHeader.append('<th>' + data.ModuleName + '</th>');
-                    tableBody.append('<td>' + data.AvgTimeSpan + '</td>');
+                    tdData += '<td>' + data.AvgTimeSpan + '</td>';
                 });
+            tdData += '</tr>';
+            tableBody.append(tdData);
+
+            $('#modalAvgTimeModuleExportButton').empty();
+            var dataTable = $('#tblAvgTimeModule').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalAvgTimeModuleExportButton'));
         }
     });
 }
@@ -1062,11 +1131,28 @@ function UpdateTotalTimeSpentChartByModule(requestType = 'yearly') {
 
             var tableBody = $('#tblTotalTimeSpentModule tbody');
             tableBody.empty();
+            var tdData = '<tr>';
             $.each(response.UserModuleTimeSpanInformation,
                 function (i, data) {
                     totalTimeSpentTableHeader.append('<th>' + data.ModuleName + '</th>');
-                    tableBody.append('<td>' + data.AvgTimeSpan + '</td>');
+                    tdData += '<td>' + data.AvgTimeSpan + '</td>';
                 });
+
+            tdData += '</tr>';
+            tableBody.append(tdData);
+
+            $('#modalTotalTimeSpentModuleExportButton').empty();
+            var dataTable = $('#tblTotalTimeSpentModule').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalTotalTimeSpentModuleExportButton'));
         }
     });
 }
@@ -1113,6 +1199,19 @@ function UpdateSessionAvgTimeByUserByModule(requestType = 'yearly') {
                         '<td>' + data.CodingReview+'</td>' +
                         '</tr>');
                 });
+
+            $('#modalSessionAvgByUserModuleExportButton').empty();
+            var dataTable = $('#tblSessionAvgByUserModule').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalSessionAvgByUserModuleExportButton'));
         }
     });
 }
@@ -1145,17 +1244,33 @@ function UpdateSessionChart(requestType = 'yearly') {
             sessionChart.updateSeries(response.ChartInfo);
 
             // table section
+            
             var tableHeader = $('#tblSessionChart thead tr');
             tableHeader.empty();
 
             var tableBody = $('#tblSessionChart tbody');
             tableBody.empty();
-
+            var tdData = '<tr>';
             $.each(response.UserSessionCountInformation,
                 function(i, data) {
                     tableHeader.append('<th>' + data.UserName + '</th>');
-                    tableBody.append('<td>' + data.SessionCount + '</td>');
+                     tdData += '<td>' + data.SessionCount + '</td>';
                 });
+            tdData += '</tr>';
+            tableBody.append(tdData);
+
+            $('#modalSessionChartExportButton').empty();
+            var dataTable = $('#tblSessionChart').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalSessionChartExportButton'));
         }
     });
 }
@@ -1186,6 +1301,8 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
             var tableBody = $('#tblSessionTimeChart tbody');
             tableBody.empty();
 
+            $('#modalSessionTimeChartExportButton').empty();
+
             $.each(response.UserModuleTimeSpanInformation,
                 function (i, data) {
                     tableBody.append('<tr>' +
@@ -1193,8 +1310,8 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
                         '<td>' + data.PatientID + '</td>' +
                         '<td>' + data.ModuleName + '</td>' +
                         '<td>' + data.UserName + '</td>' +
-                        '<td>' + data.StartTime + '</td>' +
-                        '<td>' + data.EndTime + '</td>' +
+                        '<td>' + moment(data.StartDate).format("DD-MM-YYYY h:mm:ss") + '</td>' +
+                        '<td>' + moment(data.EndDate).format("DD-MM-YYYY h:mm:ss") + '</td>' +
                         '<td>' + data.Year + '</td>' +
                         '<td>' + data.Month + '</td>' +
                         '<td>' + data.Quarter + '</td>' +
@@ -1204,6 +1321,18 @@ function UpdateSessionTimeChart(requestType = 'yearly') {
                         '</tr>');
                     
                 });
+
+            var dataTable = $('#tblSessionTimeChart').DataTable({
+                retrieve: true,
+                paging: true,
+                searching: false,
+                ordering: false
+            });
+            var buttons = new $.fn.dataTable.Buttons(dataTable, {
+                buttons: [
+                    'csv'
+                ]
+            }).container().appendTo($('#modalSessionTimeChartExportButton'));
         }
 
     });
